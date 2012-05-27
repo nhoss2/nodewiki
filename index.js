@@ -42,13 +42,13 @@ app.use('/', function(req, res){
 
 
   res.writeHead(200);
-  res.write('<head><script src="/socket.io.js"></script><script type="text/javascript" src="/static/socketio.js"></script></head><body>' + mdLinks);
-  res.end();
+  res.write('<html>\n<head><script type="text/javascript" src="/socket.io/socket.io.js"></script><script type="text/javascript" src="/static/socketio.js"></script></head><body>' + mdLinks);
+  res.end('</body></html>');
 });
 
 var server = http.createServer(app);
 server.listen(8888);
-io = socketio.listen(app);
+io = socketio.listen(server);
 
 io.sockets.on('connection', function (socket){
   socket.emit('hello', {message: 'hello!'});
