@@ -8,11 +8,12 @@ var allowedExtensions = require("./allowedExtensions");
 
 var app = connect();
 app.use(connect.logger('dev'));
-app.use(connect.static(__dirname));
+app.use(connect.static('static'));
 
 
 app.use('/', function(req, res){
-
+  res.end(fs.readFileSync('static/index.html', 'utf-8'));
+});
 
   // get contents of current directory
   var currentFiles = fs.readdirSync('.');
@@ -27,12 +28,6 @@ app.use('/', function(req, res){
     }
   });
 
-
-  /* reading and prasing md files
-  var md = fs.readFileSync('test.md', 'utf-8');
-  var md_marked = marked(md);
-  */
-
   var mdLinks = "";
 
   dir.forEach(function(fileName){
@@ -40,19 +35,12 @@ app.use('/', function(req, res){
       mdLinks += '<a class="md_file" href="#">' + fileName.name + '</a>';
     } 
   });
-
-
-  res.writeHead(200);
-  res.write(fs.readFileSync('static/index.html', 'utf-8') + mdLinks);
-  res.end('</body></html>');
-});
-
 var server = http.createServer(app);
 server.listen(8888);
 io = socketio.listen(server);
 
 io.sockets.on('connection', function (socket){
-  socket.emit('hello', {message: 'hello!'});
+  socket.emit('navLinks', {links: mdLinks});
 
   socket.on('readFile', function (file){
     console.log('readFile recieved, file: ' + file.name);

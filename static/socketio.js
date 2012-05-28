@@ -3,8 +3,8 @@ $(document).ready(function(){
 
   var socket = io.connect();
   socket.on('connect', function(){
-    socket.on('hello', function (data){
-      console.log(data.message);
+    socket.on('navLinks', function (data){
+      $('#navigation').html(data.links);
     });
 
     $(document).on('click', 'a.md_file', function(a){
