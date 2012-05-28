@@ -3,7 +3,8 @@ var http = require("http");
 var path = require("path");
 var connect = require("connect");
 var socketio = require("socket.io");
-var marked = require("marked");
+var mdserver = require("./mdserver");
+var allowedExtensions = require("./allowedExtensions");
 
 var app = connect();
 app.use(connect.logger('dev'));
@@ -19,7 +20,7 @@ app.use('/', function(req, res){
   currentFiles.forEach(function(fileName){
     if (fs.statSync(fileName).isDirectory() == true){
       dir.push({name: fileName, folder: true, markdown: false});
-    } else if (path.extname(fileName) == ".md" || path.extname(fileName) == ".mdown" || path.extname(fileName) == ".markdown"){
+    } else if (allowedExtensions.checkExtension(fileName) == true){
       dir.push({name: fileName, folder: false, markdown: true});
     } else {
       dir.push({name: fileName, folder: false, markdown: false});
@@ -36,8 +37,8 @@ app.use('/', function(req, res){
 
   dir.forEach(function(fileName){
     if (fileName.markdown == true){
-      mdLinks += '<a href="#">' + fileName.name + '</a>';
-    }
+      mdLinks += '<a class="md_file" href="#">' + fileName.name + '</a>';
+    } 
   });
 
 
@@ -55,6 +56,7 @@ io.sockets.on('connection', function (socket){
 
   socket.on('readFile', function (file){
     console.log('readFile recieved, file: ' + file.name);
+    mdserver.sendFile(file, socket);
   });
 });
 

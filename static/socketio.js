@@ -7,8 +7,16 @@ $(document).ready(function(){
       console.log(data.message);
     });
 
-    $('a').click(function(){
-      socket.emit('readFile', {name: 'test.md'});
+    $(document).on('click', 'a.md_file', function(a){
+      socket.emit('readFile', {name: $(a.currentTarget).text()});
+    });
+
+    socket.on('readFileReply', function(data){
+      if (data.error.error == true){
+        console.warn('error: ' + data.error.reason);
+      } else {
+        $('#content').html(data.fileContents);
+      }
     });
   });
 
