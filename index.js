@@ -42,7 +42,7 @@ app.use('/', function(req, res){
 
 
   res.writeHead(200);
-  res.write('<html>\n<head><script type="text/javascript" src="/socket.io/socket.io.js"></script><script type="text/javascript" src="/static/socketio.js"></script><script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script></head><body>' + mdLinks);
+  res.write(fs.readFileSync('static/index.html', 'utf-8') + mdLinks);
   res.end('</body></html>');
 });
 
@@ -52,10 +52,10 @@ io = socketio.listen(server);
 
 io.sockets.on('connection', function (socket){
   socket.emit('hello', {message: 'hello!'});
-});
 
-io.sockets.on('readFile', function (file){
-  console.log('readFile recieved, file: ' + file.name);
+  socket.on('readFile', function (file){
+    console.log('readFile recieved, file: ' + file.name);
+  });
 });
 
 
