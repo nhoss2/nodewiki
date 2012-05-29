@@ -3,6 +3,13 @@ var path = require("path");
 var marked = require("marked");
 var allowedExtensions = require("./allowedExtensions");
 
+marked.setOptions({
+  gfm: true,
+  pendantic: false,
+  sanitize: true
+});
+
+
 function sendFile(file, socket){
   // make sure only markdown files are sent
   if (allowedExtensions.checkExtension(file.name) == true){
@@ -13,7 +20,7 @@ function sendFile(file, socket){
       } else {
         // only send the markdown file if there have been no errors
         var markdownParsed = marked(data)
-        socket.emit('readFileReply', {fileContents: markdownParsed, error: {error: false}});
+        socket.emit('readFileReply', {fileContents: markdownParsed, error: {error: false}, rawMd: data, fileName: file.name});
       }
     });
   } else {
@@ -22,4 +29,19 @@ function sendFile(file, socket){
   }
 }
 
+function saveFile(file, socket){
+  if (allowedExtensions.checkExtension(file.name) == true){
+    console.log('saving file');
+    fs.writeFile(file.name, file.content, function(err, data){
+      if (err){
+        console.log('save file error: ' + err);
+      } else {
+        var markdownParsed = marked(file.content);
+        socket.emit('saveFileReply', {fileContents: markdownParsed, error: {error: false}, rawMd: file.content, fileName: file.name});
+      }
+    });
+  }
+}
+
 exports.sendFile = sendFile;
+exports.saveFile = saveFile;

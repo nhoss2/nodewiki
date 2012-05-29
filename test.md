@@ -1,12 +1,6 @@
-hey
----------------
+- this is a list
+- how is it going
+- not too bad
 
-    this is some code
 
-and this is normal text
-
-but this *is bolded*
-
-- this is
-- a list
-- i think
+#man!

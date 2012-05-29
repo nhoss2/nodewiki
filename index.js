@@ -35,6 +35,7 @@ app.use('/', function(req, res){
       mdLinks += '<a class="md_file" href="#">' + fileName.name + '</a>';
     } 
   });
+
 var server = http.createServer(app);
 server.listen(8888);
 io = socketio.listen(server);
@@ -45,6 +46,11 @@ io.sockets.on('connection', function (socket){
   socket.on('readFile', function (file){
     console.log('readFile recieved, file: ' + file.name);
     mdserver.sendFile(file, socket);
+  });
+
+  socket.on('saveFile', function (file){
+    console.log('saveFile recieved, file: ' + file.name);
+    mdserver.saveFile(file, socket);
   });
 });
 
