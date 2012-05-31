@@ -1,10 +1,9 @@
 var fs = require("fs");
 var http = require("http");
-var path = require("path");
 var connect = require("connect");
 var socketio = require("socket.io");
 var mdserver = require("./mdserver");
-var allowedExtensions = require("./allowedExtensions");
+var getDir = require("./getDir");
 
 var app = connect();
 app.use(connect.logger('dev'));
@@ -15,37 +14,37 @@ app.use('/', function(req, res){
   res.end(fs.readFileSync('static/index.html', 'utf-8'));
 });
 
-  // get contents of current directory
-  var currentFiles = fs.readdirSync('.');
-  var dir = [];
-  currentFiles.forEach(function(fileName){
-    if (fs.statSync(fileName).isDirectory() == true){
-      dir.push({name: fileName, folder: true, markdown: false});
-    } else if (allowedExtensions.checkExtension(fileName) == true){
-      dir.push({name: fileName, folder: false, markdown: true});
-    } else {
-      dir.push({name: fileName, folder: false, markdown: false});
-    }
-  });
+var currentPath = __dirname + '/';
+var dir = getDir.getDir(currentPath);
+var links = getDir.parseLinks(dir);
+var directoryDepth = 0;
 
-  var mdLinks = "";
-
-  dir.forEach(function(fileName){
-    if (fileName.markdown == true){
-      mdLinks += '<a class="md_file" href="#">' + fileName.name + '</a>';
-    } 
-  });
+var dirFolders = [];
+dir.forEach(function(i){
+  if (i.folder == true){
+    dirFolders.push(i.name);
+  }
+});
 
 var server = http.createServer(app);
 server.listen(8888);
 io = socketio.listen(server);
 
 io.sockets.on('connection', function (socket){
-  socket.emit('navLinks', {links: mdLinks});
+  socket.emit('navLinks', {links: links});
 
   socket.on('readFile', function (file){
-    console.log('readFile recieved, file: ' + file.name);
-    mdserver.sendFile(file, socket);
+    if(dirFolders.indexOf(file.name) > -1){
+      // if folder
+      currentPath += file.name;
+      dir = getDir.getDir(currentPath);
+      links = getDir.parseLinks(dir);
+      socket.emit('navLinks', {links: links});
+      directoryDepth += 1;
+      mdserver.readFolder(file.name, socket);
+    } else {
+      mdserver.sendFile(file, socket);
+    }
   });
 
   socket.on('saveFile', function (file){

@@ -43,5 +43,10 @@ function saveFile(file, socket){
   }
 }
 
+function readFolder(folder, socket){
+
+}
+
 exports.sendFile = sendFile;
 exports.saveFile = saveFile;
+exports.readFolder = readFolder;
