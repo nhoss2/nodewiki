@@ -7,18 +7,21 @@ $(document).ready(function(){
   var socket = io.connect();
   socket.on('connect', function(){
     socket.on('navLinks', function (data){
+      console.log('got navLinks: ' + data.links);
       $('#navigation').html(data.links);
     });
 
-    $(document).on('click', 'a.md_file', function(a){
+    $(document).on('click', '#navigation a', function(a){
       socket.emit('readFile', {name: $(a.currentTarget).text()});
+      $('#content #markdown_content').html('<p>Loading...</p>');
     });
 
     socket.on('readFileReply', function(data){
       if (data.error.error == true){
         console.warn('error: ' + data.error.reason);
       } else {
-        $('#content_area').html(data.fileContents);
+        $('#content #markdown_content').html(data.fileContents);
+        $('#content #content_header h1').html(data.fileName);
         rawMd = data.rawMd;
         fileName = data.fileName;
       }
