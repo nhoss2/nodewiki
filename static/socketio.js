@@ -11,12 +11,19 @@ $(document).ready(function(){
       changeContentHeight();
     });
 
+    var canSendReadFile = true;
     $(document).on('click', '#navigation a', function(a){
-      socket.emit('readFile', {name: $(a.currentTarget).text()});
-      $('#content #markdown_content').html('<p>Loading...</p>');
+      if (canSendReadFile == true){
+        socket.emit('readFile', {name: $(a.currentTarget).text()});
+        canSendReadFile = false;
+        $('#content #markdown_content').html('<p>Loading...</p>');
+        $('#navigation').children().attr('class', '');
+        $(a.currentTarget).attr('class', 'selected');
+      }
     });
 
     socket.on('readFileReply', function(data){
+      canSendReadFile = true;
       if (data.error.error == true){
         console.warn('error: ' + data.error.reason);
         $('#notification').html('error reading file: ' + data.error.reason);
@@ -34,6 +41,11 @@ $(document).ready(function(){
         changeContentHeight();
         $('#notification').slideUp();
       }
+    });
+
+    socket.on('readFolderReply', function(data){
+      canSendReadFile = true;
+      $('#content #markdown_content').html('');
     });
 
     socket.on('saveFileReply', function(data){
@@ -61,6 +73,11 @@ $(document).ready(function(){
         socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
       }
     });
+
+    $(document).on('click', '#navigation code#back_button', function(){
+      socket.emit('goBackFolder');
+    })
+
   });
 
   $(document).on('click', '#edit_save_buttons a#edit', function(){
@@ -70,6 +87,7 @@ $(document).ready(function(){
       $('#content #markdown_content').html('<textarea>' + rawMd + '</textarea>');
     }
   });
+
 
   function changeContentHeight(){
     $('#content').height('auto');
@@ -83,12 +101,6 @@ $(document).ready(function(){
       $('#content').height($('#navigation').height() + 20 + 'px');
     }
   }
-
-  // changing class of links on navigation
-  $(document).on('click', '#navigation a', function(a){
-    $('#navigation').children().attr('class', '');
-    $(a.currentTarget).attr('class', 'selected');
-  });
 
 
 });

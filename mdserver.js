@@ -10,10 +10,10 @@ marked.setOptions({
 });
 
 
-function sendFile(file, socket){
+function sendFile(file, directory, socket){
   // make sure only markdown files are sent
   if (allowedExtensions.checkExtension(file.name) == true){
-    fs.readFile(file.name, 'utf-8', function(err, data){
+    fs.readFile(directory + file.name, 'utf-8', function(err, data){
       if (err){
         console.log('read file error: ' + err);
         socket.emit('readFileReply', {fileContents: "", error: {error: true, reason: err.code}});
@@ -29,10 +29,11 @@ function sendFile(file, socket){
   }
 }
 
-function saveFile(file, socket){
-  if (allowedExtensions.checkExtension(file.name) == true){
+function saveFile(file, directory, socket){
+  if (allowedExtensions.checkExtension(file.name) == true && typeof file.content != 'undefined'){
     console.log('saving file');
-    fs.writeFile(file.name, file.content, function(err, data){
+    fs.writeFile(directory + file.name, file.content, function(err, data){
+      console.log('saved file ' + directory + file.name);
       if (err){
         console.log('save file error: ' + err);
       } else {
@@ -40,11 +41,15 @@ function saveFile(file, socket){
         socket.emit('saveFileReply', {fileContents: markdownParsed, error: {error: false}, rawMd: file.content, fileName: file.name});
       }
     });
+  } else {
+    console.log('save ERROR!');
+    socket.emit('saveFileReply', {fileContents: "", error: {error: true, reason: 'save file type not allowed or there was a problem with the content'}});
   }
 }
 
-function readFolder(folder, socket){
-
+function readFolder(links, socket){
+  socket.emit('navLinks', {links: links});
+  socket.emit('readFolderReply', {success: true});
 }
 
 exports.sendFile = sendFile;

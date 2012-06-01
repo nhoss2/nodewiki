@@ -14,43 +14,81 @@ app.use('/', function(req, res){
   res.end(fs.readFileSync('static/index.html', 'utf-8'));
 });
 
-var currentPath = __dirname + '/';
-var dir = getDir.getDir(currentPath);
-var links = getDir.parseLinks(dir);
-var directoryDepth = 0;
-
-var dirFolders = [];
-dir.forEach(function(i){
-  if (i.folder == true){
-    dirFolders.push(i.name);
-  }
-});
 
 var server = http.createServer(app);
 server.listen(8888);
 io = socketio.listen(server);
+io.set('log level', 2);
 
 io.sockets.on('connection', function (socket){
+  var currentPath = __dirname + '/';
+  var dir = getDir.getDir(currentPath);
+  var links = getDir.parseLinks(dir);
+  var directoryDepth = 0;
+
+  var dirFolders = [];
+  dir.forEach(function(i){
+    if (i.folder == true){
+      dirFolders.push(i.name);
+    }
+  });
   socket.emit('navLinks', {links: links});
 
   socket.on('readFile', function (file){
+    console.log('readFile recieved - ' + file.name);
     if(dirFolders.indexOf(file.name) > -1){
-      // if folder
+      // if requested for a folder
       currentPath += file.name;
       dir = getDir.getDir(currentPath);
-      links = getDir.parseLinks(dir);
-      socket.emit('navLinks', {links: links});
+      dir.forEach(function(i){
+        if (i.folder == true){
+          dirFolders.push(i.name);
+        }
+      });
       directoryDepth += 1;
-      mdserver.readFolder(file.name, socket);
+      links = getDir.parseLinks(dir);
+      links += '<code id="back_button">Go back</code>';
+      mdserver.readFolder(links, socket);
     } else {
-      mdserver.sendFile(file, socket);
+      mdserver.sendFile(file, currentPath, socket);
     }
+  });
+
+  socket.on('disconnect', function(){
+    // if a user disconnects, reinitialise variables
+    var currentPath = __dirname + '/';
+    var dir = getDir.getDir(currentPath);
+    dir.forEach(function(i){
+      if (i.folder == true){
+        dirFolders.push(i.name);
+      }
+    });
+    var links = getDir.parseLinks(dir);
+    var directoryDepth = 0;
   });
 
   socket.on('saveFile', function (file){
     console.log('saveFile recieved, file: ' + file.name);
-    mdserver.saveFile(file, socket);
+    mdserver.saveFile(file, currentPath, socket);
   });
+
+  socket.on('goBackFolder', function(){
+    if (directoryDepth > 0){
+      currentPath = currentPath.substr(0, currentPath.substr(0, currentPath.length - 1).lastIndexOf('/')) + '/'; // removes current directory form the currentPath variable
+      dir = getDir.getDir(currentPath);
+      dir.forEach(function(i){
+        if (i.folder == true){
+          dirFolders.push(i.name);
+        }
+      });
+      directoryDepth -= 1;
+      links = getDir.parseLinks(dir);
+      if (directoryDepth > 0){
+        links += '<code id="back_button">Go back</code>';
+      }
+      mdserver.readFolder(links, socket);
+    }
+  })
 });
 
 
