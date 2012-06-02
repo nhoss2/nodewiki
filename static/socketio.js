@@ -16,8 +16,9 @@ $(document).ready(function(){
       if (canSendReadFile == true){
         socket.emit('readFile', {name: $(a.currentTarget).text()});
         canSendReadFile = false;
-        $('#content #markdown_content').html('<p>Loading...</p>');
         $('#navigation').children().attr('class', '');
+        $('#content #markdown_content').html('<p>Loading...</p>');
+        $('#content_header h1').html('');
         $(a.currentTarget).attr('class', 'selected');
       }
     });
@@ -46,6 +47,7 @@ $(document).ready(function(){
     socket.on('readFolderReply', function(data){
       canSendReadFile = true;
       $('#content #markdown_content').html('');
+      changeContentHeight();
     });
 
     socket.on('saveFileReply', function(data){
@@ -69,13 +71,16 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '#edit_save_buttons a#save', function(){
-      if (editingAllowed == false){ //currently editing
+      if (editingAllowed == false){ //if user is currently editing
         socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
       }
     });
 
     $(document).on('click', '#navigation code#back_button', function(){
       socket.emit('goBackFolder');
+      $('#content #markdown_content').html('<p>Loading...</p>');
+      $('#content_header h1').html('');
+      editingAllowed = true;
     })
 
   });
