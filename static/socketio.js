@@ -17,8 +17,8 @@ $(document).ready(function(){
         socket.emit('readFile', {name: $(a.currentTarget).text()});
         canSendReadFile = false;
         $('#navigation').children().attr('class', '');
-        $('#content #markdown_content').html('<p>Loading...</p>');
-        $('#content_header h1').html('');
+        $('#content #markdown_content').html('');
+        $('#content_header h1').html('Node Wiki');
         $(a.currentTarget).attr('class', 'selected');
       }
     });
@@ -81,8 +81,8 @@ $(document).ready(function(){
 
     $(document).on('click', '#navigation code#back_button', function(){
       socket.emit('goBackFolder');
-      $('#content #markdown_content').html('<p>Loading...</p>');
-      $('#content_header h1').html('');
+      $('#content #markdown_content').html('');
+      $('#content_header h1').html('Node Wiki');
       //editingAllowed = true;
     })
 

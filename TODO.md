@@ -1,3 +1,4 @@
   - change design of back button
-  - create new .md file
-  - create new folder
+  - have the ability to create new .md file
+  - have the ability to create new folder
+  - have an alert that asks if user wants to save changes when they navigate away
