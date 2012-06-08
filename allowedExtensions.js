@@ -3,7 +3,7 @@ var path = require("path");
 // checks if a given file name is allowed (this is usually for reading or writing)
 // currently only allows markdown files, may allow text files in the future
 function checkExtension(fileName){
-  if (path.extname(fileName) == ".md" || path.extname(fileName) == ".mdown" || path.extname(fileName) == ".markdown"){
+  if (path.extname(fileName) == ".md" || path.extname(fileName) == ".mdown" || path.extname(fileName) == ".markdown" || path.extname(fileName) == ".mkd" || path.extname(fileName) == ".mkdn"){
     return true;
   }
   return false;

@@ -39,6 +39,7 @@ $(document).ready(function(){
         rawMd = data.rawMd;
         fileName = data.fileName;
         editingAllowed = true;
+        showButtons(true);
         changeContentHeight();
         $('#notification').slideUp();
       }
@@ -48,6 +49,8 @@ $(document).ready(function(){
       canSendReadFile = true;
       $('#content #markdown_content').html('');
       changeContentHeight();
+      editingAllowed = false;
+      showButtons(false);
     });
 
     socket.on('saveFileReply', function(data){
@@ -80,7 +83,7 @@ $(document).ready(function(){
       socket.emit('goBackFolder');
       $('#content #markdown_content').html('<p>Loading...</p>');
       $('#content_header h1').html('');
-      editingAllowed = true;
+      //editingAllowed = true;
     })
 
   });
@@ -92,6 +95,15 @@ $(document).ready(function(){
       $('#content #markdown_content').html('<textarea>' + rawMd + '</textarea>');
     }
   });
+
+  function showButtons(show){
+    var buttons = '<a id="edit" href="#">Edit</a>\n<a id="save" href="#">Save</a>';
+    if (show){
+      $('#edit_save_buttons').html(buttons);
+    } else {
+      $('#edit_save_buttons').html('');
+    }
+  }
 
 
   function changeContentHeight(){
