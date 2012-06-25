@@ -33,6 +33,7 @@ function parseLinks(dir){
   });
 
   mdLinks += '<code id="new_file">New File</code>';
+  mdLinks += '<code id="new_folder">New Folder</code>';
 
   return mdLinks;
 }

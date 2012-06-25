@@ -136,6 +136,35 @@ $(document).ready(function(){
       showButtons(false);
     });
 
+    var tempFolder;
+    var makingNewFolder = false;
+    $(document).on('click', '#navigation code#new_folder', function(){
+      $('#navigation a:last').after('<a href="#"><form><input type="text" /></form></a>');
+      tempFolder = $('#navigation a:last');
+      $('#navigation').children().attr('class', '');
+      $(tempFolder).attr('class', 'selected');
+      $('#navigation code#new_folder').css('display', 'none');
+      $('#navigation input').focus();
+      makingNewFolder = true;
+    });
+
+    $(document).on('mousedown', function(){
+      if (makingNewFolder == true){
+        makingNewFolder = false;
+        if ($('#navigation input').val() != ''){
+          socket.emit('newFolder', $('#navigation input').val());
+        }
+        $(tempFolder).remove();
+        tempFolder = '';
+        $('#navigation code#new_folder').css('display', 'inline');
+      }
+    });
+
+    $(document).on('submit', '#navigation form', function(){
+      console.log('submit called');
+      return false;
+    });
+
   });
 
   $(document).on('click', '#edit_save_buttons a#edit', function(){

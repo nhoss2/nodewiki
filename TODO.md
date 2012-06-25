@@ -1,4 +1,4 @@
   - change design of back button
-  - have the ability to create new .md file
   - have the ability to create new folder
+  - error handling of some known errors like trying to read non-exsistant directories
   - have an alert that asks if user wants to save changes when they navigate away
