@@ -56,7 +56,7 @@ $(document).ready(function(){
     socket.on('saveFileReply', function(data){
       if (data.error.error == true){
         console.warn('there was an error saving');
-        $('#notification').html('there was an error');
+        $('#notification').html('there was an error: ' + data.error.reason);
         $('#notification').slideDown('fast', function(){
           window.setTimeout(function(){$('#notification').slideUp()}, 7000);
         });
@@ -70,6 +70,13 @@ $(document).ready(function(){
         $('#notification').slideDown('fast', function(){
           window.setTimeout(function(){$('#notification').slideUp()}, 2000);
         });
+
+        if (creatingNewFile == true){
+          creatingNewFile == false;
+          $('#content #content_header h1').html(fileName);
+          tempFile = '';
+          socket.emit('refreshNav');
+        }
       }
     });
 
@@ -78,9 +85,11 @@ $(document).ready(function(){
         if (creatingNewFile == true){
           if ($('#content #content_header input').val() != '' && $('#content #markdown_content textarea').val() != ''){
             socket.emit('saveFile', {name: $('#content #content_header input').val(), content: $('#content #markdown_content textarea').val()});
-            // create new file in nav here
-            // making sure errors are handled
-            // get rid of temp "new file..." button on nav
+          } else {
+            $('#notification').html('The title or the content cannot be empty. Also, the title needs to end with ".md"');
+            $('#notification').slideDown('fast', function(){
+              window.setTimeout(function(){$('#notification').slideUp()}, 4000);
+            });
           }
         } else {
           socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
@@ -102,6 +111,7 @@ $(document).ready(function(){
       fileName = '';
       rawMd = '';
       creatingNewFile = true;
+      editingAllowed = false;
       socket.emit('newFile');
       $('#navigation a:last').after('<a href="#"><code>New File...</code></a>');
       tempFile = $('#navigation a:last');
@@ -119,6 +129,7 @@ $(document).ready(function(){
       tempFile.remove();
       tempFile = '';
       creatingNewFile = false;
+      editingAllowed = true;
       $('#content #markdown_content').html('');
       $('#content #content_header h1').html('Node Wiki');
       $('#navigation').append('<code id="new_file">New File</code>');

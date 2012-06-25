@@ -38,12 +38,7 @@ io.sockets.on('connection', function (socket){
     console.log('readFile recieved - ' + file.name);
     if(dirFolders.indexOf(file.name) > -1){ // checks if request is in the dirFolders array (meaning that the request is for a folder)
       currentPath += file.name;
-      dir = getDir.getDir(currentPath);
-      dir.forEach(function(i){
-        if (i.folder == true){
-          dirFolders.push(i.name);
-        }
-      });
+      refreshDir();
       directoryDepth += 1;
       links = getDir.parseLinks(dir);
       links += '<code id="back_button">Go back</code>';
@@ -56,12 +51,7 @@ io.sockets.on('connection', function (socket){
   socket.on('disconnect', function(){
     // if a user disconnects, reinitialise variables
     var currentPath = __dirname + '/';
-    var dir = getDir.getDir(currentPath);
-    dir.forEach(function(i){
-      if (i.folder == true){
-        dirFolders.push(i.name);
-      }
-    });
+    refreshDir();
     var links = getDir.parseLinks(dir);
     var directoryDepth = 0;
   });
@@ -74,12 +64,7 @@ io.sockets.on('connection', function (socket){
   socket.on('goBackFolder', function(){
     if (directoryDepth > 0){
       currentPath = currentPath.substr(0, currentPath.substr(0, currentPath.length - 1).lastIndexOf('/')) + '/'; // removes current directory form the currentPath variable
-      dir = getDir.getDir(currentPath);
-      dir.forEach(function(i){
-        if (i.folder == true){
-          dirFolders.push(i.name);
-        }
-      });
+      refreshDir();
       directoryDepth -= 1;
       links = getDir.parseLinks(dir);
       if (directoryDepth > 0){
@@ -88,6 +73,21 @@ io.sockets.on('connection', function (socket){
       mdserver.readFolder(links, socket);
     }
   })
+
+  socket.on('refreshNav', function(){
+    refreshDir();
+    links = getDir.parseLinks(dir);
+    socket.emit('navLinks', {links: links});
+  });
+
+  function refreshDir(){
+    dir = getDir.getDir(currentPath);
+    dir.forEach(function(i){
+      if (i.folder == true){
+        dirFolders.push(i.name);
+      }
+    });
+  }
 
 });
 
