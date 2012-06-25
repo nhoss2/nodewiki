@@ -26,7 +26,7 @@ io.sockets.on('connection', function (socket){
   var links = getDir.parseLinks(dir);
   var directoryDepth = 0;
 
-  var dirFolders = [];
+  var dirFolders = []; // array to hold the names of all folders in current directory
   dir.forEach(function(i){
     if (i.folder == true){
       dirFolders.push(i.name);
@@ -36,8 +36,7 @@ io.sockets.on('connection', function (socket){
 
   socket.on('readFile', function (file){
     console.log('readFile recieved - ' + file.name);
-    if(dirFolders.indexOf(file.name) > -1){
-      // if requested for a folder
+    if(dirFolders.indexOf(file.name) > -1){ // checks if request is in the dirFolders array (meaning that the request is for a folder)
       currentPath += file.name;
       dir = getDir.getDir(currentPath);
       dir.forEach(function(i){
@@ -89,6 +88,7 @@ io.sockets.on('connection', function (socket){
       mdserver.readFolder(links, socket);
     }
   })
+
 });
 
 

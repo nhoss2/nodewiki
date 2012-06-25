@@ -75,7 +75,16 @@ $(document).ready(function(){
 
     $(document).on('click', '#edit_save_buttons a#save', function(){
       if (editingAllowed == false){ //if user is currently editing
-        socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
+        if (creatingNewFile == true){
+          if ($('#content #content_header input').val() != '' && $('#content #markdown_content textarea').val() != ''){
+            socket.emit('saveFile', {name: $('#content #content_header input').val(), content: $('#content #markdown_content textarea').val()});
+            // create new file in nav here
+            // making sure errors are handled
+            // get rid of temp "new file..." button on nav
+          }
+        } else {
+          socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
+        }
       }
     });
 
@@ -85,6 +94,36 @@ $(document).ready(function(){
       $('#content_header h1').html('Node Wiki');
       //editingAllowed = true;
     })
+
+    var tempFile; // hold the <a> tag for the new file being created
+    var creatingNewFile = false;
+
+    $(document).on('click', '#navigation code#new_file', function(){
+      fileName = '';
+      rawMd = '';
+      creatingNewFile = true;
+      socket.emit('newFile');
+      $('#navigation a:last').after('<a href="#"><code>New File...</code></a>');
+      tempFile = $('#navigation a:last');
+      $('#navigation').children().attr('class', '');
+      tempFile.attr('class', 'selected');
+      $('#navigation code#new_file').remove();
+      $('#content #markdown_content').html('<textarea></textarea>');
+      $('#content #content_header h1').html('<form><input type="text" /></form>');
+      $('#content #content_header input').focus();
+      showButtons(true, true);
+      changeContentHeight();
+    });
+
+    $(document).on('click', '#edit_save_buttons a#cancel', function(){
+      tempFile.remove();
+      tempFile = '';
+      creatingNewFile = false;
+      $('#content #markdown_content').html('');
+      $('#content #content_header h1').html('Node Wiki');
+      $('#navigation').append('<code id="new_file">New File</code>');
+      showButtons(false);
+    });
 
   });
 
@@ -96,10 +135,14 @@ $(document).ready(function(){
     }
   });
 
-  function showButtons(show){
+  function showButtons(show, newFile){
     var buttons = '<a id="edit" href="#">Edit</a>\n<a id="save" href="#">Save</a>';
     if (show){
-      $('#edit_save_buttons').html(buttons);
+      if (newFile){
+        $('#edit_save_buttons').html('<a id="cancel" href="#">Cancel</a>\n<a id="save" href="#">Save</a>');
+      } else {
+        $('#edit_save_buttons').html(buttons);
+      }
     } else {
       $('#edit_save_buttons').html('');
     }

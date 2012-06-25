@@ -31,6 +31,7 @@ function sendFile(file, directory, socket){
 
 function saveFile(file, directory, socket){
   if (allowedExtensions.checkExtension(file.name) == true && typeof file.content != 'undefined'){
+    // only allow markdown files to be saved
     console.log('saving file');
     fs.writeFile(directory + file.name, file.content, function(err, data){
       console.log('saved file ' + directory + file.name);
