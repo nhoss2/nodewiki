@@ -1,8 +1,19 @@
 {
   "name": "nodewiki",
-    "version": "0.0.1",
-    "author": "Nafis Hossain",
-    "description": "A simple wiki that uses markdown files",
-
-    "license": "MIT"
+  "version": "0.0.1-1",
+  "author": "Nafis Hossain",
+  "description": "A simple wiki that uses markdown files",
+  "license": "MIT",
+  "scripts": {
+    "start": "index.js"
+  },
+  "engines": {
+    "node": "0.6.x"
+  },
+  "subdomain": "nodewiki",
+  "dependencies": {
+    "connect": "2.3.x",
+    "socket.io": "0.9.x",
+    "marked": "0.2.x"
+  }
 }
