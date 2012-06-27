@@ -1,7 +1,7 @@
 {
   "name": "nodewiki",
   "version": "0.0.1-1",
-  "author": "Nafis Hossain",
+  "author": "Nafis Hossain <nhoss2@gmail.com>",
   "description": "A simple wiki that uses markdown files",
   "license": "MIT",
   "scripts": {
@@ -10,10 +10,18 @@
   "engines": {
     "node": "0.6.x"
   },
+  "main": "nodewiki.js",
+  "bin": "./nodewiki.js",
   "subdomain": "nodewiki",
   "dependencies": {
     "connect": "2.3.x",
     "socket.io": "0.9.x",
     "marked": "0.2.x"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nhoss2/nodewiki.git"
   }
 }

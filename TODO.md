@@ -2,3 +2,5 @@
   - have the ability to create new .md file
   - have the ability to create new folder
   - have an alert that asks if user wants to save changes when they navigate away
+  - have syntax highlighting of code
+  - change design of formatted markdown files

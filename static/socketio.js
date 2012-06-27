@@ -39,6 +39,7 @@ $(document).ready(function(){
         rawMd = data.rawMd;
         fileName = data.fileName;
         editingAllowed = true;
+        creatingNewFile = false;
         showButtons(true);
         changeContentHeight();
         $('#notification').slideUp();
@@ -50,6 +51,7 @@ $(document).ready(function(){
       $('#content #markdown_content').html('');
       changeContentHeight();
       editingAllowed = false;
+      creatingNewFile = false;
       showButtons(false);
     });
 
@@ -72,11 +74,19 @@ $(document).ready(function(){
         });
 
         if (creatingNewFile == true){
-          creatingNewFile == false;
+          creatingNewFile = false;
           $('#content #content_header h1').html(fileName);
           tempFile = '';
           socket.emit('refreshNav');
         }
+      }
+    });
+
+    $(document).on('click', '#edit_save_buttons a#edit', function(){
+      if (editingAllowed == true){
+        editingAllowed = false;
+        $('#content').height('auto');
+        $('#content #markdown_content').html('<textarea>' + rawMd + '</textarea>');
       }
     });
 
@@ -113,7 +123,13 @@ $(document).ready(function(){
       creatingNewFile = true;
       editingAllowed = false;
       socket.emit('newFile');
-      $('#navigation a:last').after('<a href="#"><code>New File...</code></a>');
+
+      if ($('#navigation a:last').length != 0){
+        $('#navigation a:last').after('<a href="#"><code>New File...</code></a>');
+      } else {
+        $('#navigation').append('<a href="#"><code>New File...</code></a>');
+      }
+
       tempFile = $('#navigation a:last');
       $('#navigation').children().attr('class', '');
       tempFile.attr('class', 'selected');
@@ -134,16 +150,9 @@ $(document).ready(function(){
       $('#content #content_header h1').html('Node Wiki');
       $('#navigation').append('<code id="new_file">New File</code>');
       showButtons(false);
+      changeContentHeight();
     });
 
-  });
-
-  $(document).on('click', '#edit_save_buttons a#edit', function(){
-    if (editingAllowed == true){
-      editingAllowed = false;
-      $('#content').height('auto');
-      $('#content #markdown_content').html('<textarea>' + rawMd + '</textarea>');
-    }
   });
 
   function showButtons(show, newFile){
