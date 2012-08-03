@@ -173,7 +173,6 @@ $(document).ready(function(){
     // creating new folder
     ///////////////////////////////////////////////////////////
 
-  
     creatingNewFolder = false;
     $(document).on('click', '#navigation a#new_folder', function(){
       creatingNewFolder = true;

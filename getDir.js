@@ -48,7 +48,6 @@ function parseLinks(dir, dirDepth){
     mdLinks += '<a href="#" id="new_folder">New Folder</a>';
     mdLinks += '</div>';
 
-
     return mdLinks;
 
   } catch (err) {
