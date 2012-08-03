@@ -11,15 +11,22 @@ $(document).ready(function(){
       changeContentHeight();
     });
 
+    ///////////////////////////////////////////////////////////
+    // opening files and navigation
+    ///////////////////////////////////////////////////////////
     var canSendReadFile = true;
-    $(document).on('click', '#navigation a', function(a){
+    $(document).on('click', '#navigation a.link', function(a){
       if (canSendReadFile == true){
-        socket.emit('readFile', {name: $(a.currentTarget).text()});
         canSendReadFile = false;
-        $('#navigation').children().attr('class', '');
+        socket.emit('readFile', {name: $(a.currentTarget).text()});
+        $('#navigation').children().attr('class', 'link');
         $('#content #markdown_content').html('');
         $('#content_header h1').html('Node Wiki');
-        $(a.currentTarget).attr('class', 'selected');
+        $(a.currentTarget).attr('class', 'selected link');
+
+        if (creatingNewFile){
+          cancelNewFile();
+        }
       }
     });
 
@@ -55,6 +62,34 @@ $(document).ready(function(){
       showButtons(false);
     });
 
+    $(document).on('click', '#navigation a#go_back', function(){
+      socket.emit('goBackFolder');
+      $('#content #markdown_content').html('');
+      $('#content_header h1').html('Node Wiki');
+      //editingAllowed = true;
+    })
+
+    ///////////////////////////////////////////////////////////
+    // saving files
+    ///////////////////////////////////////////////////////////
+
+    $(document).on('click', '#edit_save_buttons a#save', function(){
+      if (editingAllowed == false){ //if user is currently editing
+        if (creatingNewFile == true){
+          if ($('#content #content_header input').val() != '' && $('#content #markdown_content textarea').val() != ''){
+            socket.emit('saveFile', {name: $('#content #content_header input').val(), content: $('#content #markdown_content textarea').val()});
+          } else {
+            $('#notification').html('The title or the content cannot be empty. Also, the title needs to end with ".md"');
+            $('#notification').slideDown('fast', function(){
+              window.setTimeout(function(){$('#notification').slideUp()}, 4000);
+            });
+          }
+        } else {
+          socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
+        }
+      }
+    });
+
     socket.on('saveFileReply', function(data){
       if (data.error.error == true){
         console.warn('there was an error saving');
@@ -82,6 +117,9 @@ $(document).ready(function(){
       }
     });
 
+    ///////////////////////////////////////////////////////////
+    // editing files
+    ///////////////////////////////////////////////////////////
     $(document).on('click', '#edit_save_buttons a#edit', function(){
       if (editingAllowed == true){
         editingAllowed = false;
@@ -90,50 +128,24 @@ $(document).ready(function(){
       }
     });
 
-    $(document).on('click', '#edit_save_buttons a#save', function(){
-      if (editingAllowed == false){ //if user is currently editing
-        if (creatingNewFile == true){
-          if ($('#content #content_header input').val() != '' && $('#content #markdown_content textarea').val() != ''){
-            socket.emit('saveFile', {name: $('#content #content_header input').val(), content: $('#content #markdown_content textarea').val()});
-          } else {
-            $('#notification').html('The title or the content cannot be empty. Also, the title needs to end with ".md"');
-            $('#notification').slideDown('fast', function(){
-              window.setTimeout(function(){$('#notification').slideUp()}, 4000);
-            });
-          }
-        } else {
-          socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
-        }
-      }
-    });
 
-    $(document).on('click', '#navigation code#back_button', function(){
-      socket.emit('goBackFolder');
-      $('#content #markdown_content').html('');
-      $('#content_header h1').html('Node Wiki');
-      //editingAllowed = true;
-    })
-
+    ///////////////////////////////////////////////////////////
+    // creating new files
+    ///////////////////////////////////////////////////////////
     var tempFile; // hold the <a> tag for the new file being created
     var creatingNewFile = false;
 
-    $(document).on('click', '#navigation code#new_file', function(){
+    $(document).on('click', '#navigation a#new_file', function(){
       fileName = '';
       rawMd = '';
       creatingNewFile = true;
       editingAllowed = false;
-      socket.emit('newFile');
 
-      if ($('#navigation a:last').length != 0){
-        $('#navigation a:last').after('<a href="#"><code>New File...</code></a>');
-      } else {
-        $('#navigation').append('<a href="#"><code>New File...</code></a>');
-      }
-
-      tempFile = $('#navigation a:last');
-      $('#navigation').children().attr('class', '');
-      tempFile.attr('class', 'selected');
-      $('#navigation code#new_file').remove();
+      $('#navigation #tri_buttons').before('<a href="#" class="link"><code>New File...</code></a>');
+      tempFile = $('#navigation a.link:last');
+      $('#navigation').children().attr('class', 'link');
+      tempFile.attr('class', 'link selected');
+      $('#navigation a#new_file').attr('id', 'new_file_inactive');
       $('#content #markdown_content').html('<textarea></textarea>');
       $('#content #content_header h1').html('<form><input type="text" /></form>');
       $('#content #content_header input').focus();
@@ -142,18 +154,99 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '#edit_save_buttons a#cancel', function(){
+      cancelNewFile();
+    });
+
+    function cancelNewFile(){
       tempFile.remove();
       tempFile = '';
       creatingNewFile = false;
       editingAllowed = true;
       $('#content #markdown_content').html('');
       $('#content #content_header h1').html('Node Wiki');
-      $('#navigation').append('<code id="new_file">New File</code>');
+      $('#navigation a#new_file_inactive').attr('id', 'new_file');
       showButtons(false);
+      changeContentHeight();
+    }
+
+    ///////////////////////////////////////////////////////////
+    // creating new folder
+    ///////////////////////////////////////////////////////////
+
+  
+    creatingNewFolder = false;
+    $(document).on('click', '#navigation a#new_folder', function(){
+      creatingNewFolder = true;
+      fileName = '';
+      rawMd = '';
+      editingAllowed = false;
+
+      if (creatingNewFile){
+        cancelNewFile();
+      }
+
+      $('#content #content_header h1').html('Node Wiki');
+      $('#content #markdown_content').html('Creating new folder, press enter to create the folder');
+      $('#navigation').children().attr('class', 'link');
+      $('#navigation #tri_buttons').before('<div id="temp_new_folder"><form><input type="text" /></form></div>');
+      tempFile = $('#navigation #temp_new_folder');
+      $('#navigation input').focus();
+      $('#navigation a#new_folder').attr('id', 'new_folder_inactive');
+      $('#navigation #tri_buttons').html('<a href="#" id="cancel_folder">Cancel</a><a href="#" id="save_folder">Create Folder</a>');
       changeContentHeight();
     });
 
+    $(document).on('click', '#navigation a#cancel_folder', function(){
+      cancelNewFolder();
+    });
+
+    function createFolder(){
+      if ($('#navigation input').val() != ''){
+        socket.emit('newFolder', $('#navigation input').val());
+        cancelNewFolder();
+      } else {
+        $('#notification').html('Please have at least 1 character for the folder name');
+        $('#notification').slideDown('fast', function(){
+          window.setTimeout(function(){$('#notification').slideUp()}, 4000);
+        });
+      }
+    }
+
+    $(document).on('click', '#navigation a#save_folder', function(){
+      createFolder();
+    });
+    
+
+    $('#navigation').submit(function(){
+      createFolder();
+    });
+    
+
+    function cancelNewFolder(){
+      if (creatingNewFolder){
+        creatingNewFolder = false;
+        tempFile.remove();
+        tempFile = '';
+        $('#navigation #tri_buttons').html('');
+        socket.emit('refreshNav');
+        $('#content #markdown_content').html('');
+      }
+    }
+
+    socket.on('newFolderReply', function(err){
+      $('#notification').html('There was an error making the folder, error code: ' + err.code);
+      $('#notification').slideDown('fast', function(){
+        window.setTimeout(function(){$('#notification').slideUp()}, 4000);
+      });
+    });
+   
+
   });
+ 
+
+  ///////////////////////////////////////////////////////////
+  // functions for the layout
+  ///////////////////////////////////////////////////////////
 
   function showButtons(show, newFile){
     var buttons = '<a id="edit" href="#">Edit</a>\n<a id="save" href="#">Save</a>';

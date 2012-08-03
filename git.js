@@ -14,7 +14,7 @@ function commit(file, directory){
   });
 
   git.on('exit', function(code){
-    gitCommit = child_process.spawn('git', ['commit', '-m', '"nodewiki auto commit"', file.name], {cwd: directory});
+    gitCommit = child_process.spawn('git', ['commit', '-m', 'nodewiki auto commit', file.name], {cwd: directory});
 
     gitCommit.stdout.on('data', function(data){
       console.log('git: ' + data);

@@ -7,7 +7,7 @@ var git = require("./git");
 marked.setOptions({
   gfm: true,
   pendantic: false,
-  sanitize: true
+  sanitize: true,
 });
 
 
@@ -22,10 +22,6 @@ function sendFile(file, directory, socket){
         // only send the markdown file if there have been no errors
         var markdownParsed = marked(data)
         socket.emit('readFileReply', {fileContents: markdownParsed, error: {error: false}, rawMd: data, fileName: file.name});
-
-        if (process.argv[2] == 'git' || process.argv[2] == '--git'){
-          git.commit(file, directory);
-        }
       }
     });
   } else {
@@ -45,7 +41,9 @@ function saveFile(file, directory, socket){
       } else {
         var markdownParsed = marked(file.content);
         socket.emit('saveFileReply', {fileContents: markdownParsed, error: {error: false}, rawMd: file.content, fileName: file.name});
-        git.commit(file, directory);
+        if (process.argv[2] == 'git' || process.argv[2] == '--git'){
+          git.commit(file, directory);
+        }
       }
     });
   } else {
