@@ -20,9 +20,10 @@ $(document).ready(function(){
         canSendReadFile = false;
         socket.emit('readFile', {name: $(a.currentTarget).text()});
         $('#navigation').children().attr('class', 'link');
-        $('#content #markdown_content').html('');
+        $('#content #markdown_content').html('<em>Loading...</em>');
         $('#content_header h1').html('Node Wiki');
         $(a.currentTarget).attr('class', 'selected link');
+        changeContentHeight();
 
         if (creatingNewFile){
           cancelNewFile();

@@ -58,7 +58,7 @@ if (start){
   });
 
   var server = http.createServer(app);
-  server.listen(portNumber);
+  server.listen(process.env.PORT || portNumber);
   io = socketio.listen(server);
   io.set('log level', 2);
 
