@@ -1,1 +1,0 @@
-web: node nodewiki.js

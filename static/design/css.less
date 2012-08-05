@@ -32,6 +32,7 @@ code{
     background: #ddd;
     border: 1px solid #bbb;
     padding: 12px;
+    overflow: auto;
   }
 
   code{
@@ -65,6 +66,7 @@ code{
 
     #edit_save_buttons{
       float: right;
+      font-size: 16px;
 
       a#save, a#edit, a#cancel{
         background: #5fbc70;
@@ -108,15 +110,35 @@ code{
 
   #markdown_content{
     padding-top: 20px;
-    font-size: 12px;
+    font-size: 14px;
 
     p{
       margin: 10px 0;
     }
 
-    h1, h2, h3, h4, h5, h6{
+    a{
+      color: #1563f1;
+    }
+
+    h1, h2{
       border-bottom: 1px solid #bbb;
       margin-bottom: 3px;
+    }
+
+    h1{
+      font-size: 28px;
+    }
+
+    h2{
+      font-size: 24px;
+    }
+
+    h3{
+      font-size: 20px;
+    }
+
+    h4{
+      font-size: 17px;
     }
   }
 
@@ -265,6 +287,20 @@ code{
       &#save_folder{
         border: none;
       }
+    }
+  }
+}
+
+@media screen and (min-width: 1300px){
+  #back{
+    width: 1200px;
+  }
+
+  #content{
+    width: 920px;
+
+    #markdown_content{
+      font-size: 15px;
     }
   }
 }
