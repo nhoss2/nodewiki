@@ -5,10 +5,10 @@
   "description": "A simple wiki that uses markdown files",
   "license": "MIT",
   "scripts": {
-    "start": "index.js"
+    "start": "nodewiki.js"
   },
   "engines": {
-    "node": "0.6.x"
+    "node": ">=0.6.x"
   },
   "main": "nodewiki.js",
   "bin": "./nodewiki.js",
@@ -18,8 +18,6 @@
     "socket.io": "0.9.x",
     "marked": "0.2.x"
   },
-  "devDependencies": {},
-  "optionalDependencies": {},
   "repository": {
     "type": "git",
     "url": "git://github.com/nhoss2/nodewiki.git"
