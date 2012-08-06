@@ -1,6 +1,6 @@
 {
   "name": "nodewiki",
-  "version": "0.0.1-1",
+  "version": "0.1.0",
   "author": "Nafis Hossain <nhoss2@gmail.com>",
   "description": "A simple wiki that uses markdown files",
   "license": "MIT",

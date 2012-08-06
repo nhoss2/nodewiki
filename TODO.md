@@ -1,10 +1,11 @@
 TODO:
 
-- write out the README
+- have the ability to link to other files
 - have an alert that asks if user wants to save changes when they navigate away
 - have syntax highlighting of code
 - have the ability to delete files and folders
 - maybe have a better markdown editor
+- create public API
 
 BUGS:
 

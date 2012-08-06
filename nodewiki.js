@@ -5,8 +5,8 @@ var http = require("http");
 var path = require("path");
 var connect = require("connect");
 var socketio = require("socket.io");
-var mdserver = require("./mdserver");
-var getDir = require("./getDir");
+var mdserver = require("./lib/mdserver");
+var getDir = require("./lib/getDir");
 
 // for the CLI:
 var start = false;
