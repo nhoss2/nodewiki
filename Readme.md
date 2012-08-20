@@ -16,7 +16,7 @@ This is a simple wiki system that uses markdown (text) files as its database. It
 
 ##Usage
 
-    nodewiki <command> [port]
+    nodewiki [command] [port]
 
 Node Wiki can be started on any directory. To start it, simply type `nodewiki` in the directory that you want to start it in. Node wiki will start on port 8888 (unless you type `nodewiki PORTNUMBER_HERE`).
 
