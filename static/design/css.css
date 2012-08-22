@@ -29,12 +29,6 @@ code {
   -webkit-box-shadow: 0px 0px 8px 0px #494949;
   box-shadow: 0px 0px 8px 0px #494949;
 }
-#content pre {
-  background: #ddd;
-  border: 1px solid #bbb;
-  padding: 12px;
-  overflow: auto;
-}
 #content code {
   background: #ddd;
   padding: 1px 3px;
@@ -131,6 +125,23 @@ code {
 }
 #content #markdown_content h4 {
   font-size: 17px;
+}
+#content #markdown_content pre {
+  background: #ddd;
+  border: 1px solid #bbb;
+  padding: 12px;
+}
+#content #markdown_content .CodeMirror {
+  background: #fafafa;
+  border: 1px solid #aaa;
+}
+#content #markdown_content .CodeMirror pre {
+  background: transparent;
+  border: none;
+  padding: 0px;
+}
+#content #markdown_content .CodeMirror-scroll {
+  height: 100%;
 }
 #content textarea {
   width: 100%;

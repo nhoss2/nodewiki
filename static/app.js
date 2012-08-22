@@ -126,7 +126,10 @@ $(document).ready(function(){
         editingAllowed = false;
         $('#content').height('auto');
         $('#content #markdown_content').html('<textarea id="md_editor">' + rawMd + '</textarea>');
-        var mdEditor = CodeMirror.fromTextArea(document.getElementById('md_editor'));
+        var mdEditor = CodeMirror.fromTextArea(document.getElementById('md_editor'), {
+          mode: "markdown",
+          lineWrapping: true,
+        });
       }
     });
 
