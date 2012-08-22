@@ -133,26 +133,38 @@ code{
     h4{
       font-size: 17px;
     }
-
+    
+    /*
     pre{
       background: #ddd;
       border: 1px solid #bbb;
       padding: 12px;
     }
+    */
+    
 
     .CodeMirror{
       background: #fafafa;
       border: 1px solid #aaa;
 
+      
+      /*
       pre{
         background: transparent;
         border: none;
         padding: 0px;
       }
+      */
     }
 
     .CodeMirror-scroll{
       height: 100%;
+      overflow: hidden;
+    }
+
+    pre.CodeMirror-cursor{
+      border-left: 1px solid black;
+      font-size: 15px;
     }
   }
 
@@ -314,6 +326,10 @@ code{
     width: 920px;
 
     #markdown_content{
+      //font-size: 15px;
+    }
+
+    pre.CodeMirror-cursor{
       font-size: 15px;
     }
   }

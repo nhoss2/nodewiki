@@ -102,6 +102,14 @@ code {
 #content #markdown_content {
   padding-top: 20px;
   font-size: 14px;
+  /*
+    pre{
+      background: #ddd;
+      border: 1px solid #bbb;
+      padding: 12px;
+    }
+    */
+
 }
 #content #markdown_content p {
   margin: 10px 0;
@@ -126,22 +134,25 @@ code {
 #content #markdown_content h4 {
   font-size: 17px;
 }
-#content #markdown_content pre {
-  background: #ddd;
-  border: 1px solid #bbb;
-  padding: 12px;
-}
 #content #markdown_content .CodeMirror {
   background: #fafafa;
   border: 1px solid #aaa;
-}
-#content #markdown_content .CodeMirror pre {
-  background: transparent;
-  border: none;
-  padding: 0px;
+  /*
+      pre{
+        background: transparent;
+        border: none;
+        padding: 0px;
+      }
+      */
+
 }
 #content #markdown_content .CodeMirror-scroll {
   height: 100%;
+  overflow: hidden;
+}
+#content #markdown_content pre.CodeMirror-cursor {
+  border-left: 1px solid black;
+  font-size: 15px;
 }
 #content textarea {
   width: 100%;
@@ -283,7 +294,7 @@ code {
   #content {
     width: 920px;
   }
-  #content #markdown_content {
+  #content pre.CodeMirror-cursor {
     font-size: 15px;
   }
 }
