@@ -5,144 +5,169 @@ var http = require("http");
 var path = require("path");
 var connect = require("connect");
 var socketio = require("socket.io");
+var mod_getopt = require('posix-getopt');
 var mdserver = require("./lib/mdserver");
 var getDir = require("./lib/getDir");
 
-// for the CLI:
-var start = false;
-var gitErr = false;
-if (typeof process.argv[2] == 'undefined'){
-  console.log('Starting node wiki');
-  start = true;
-} 
-
-if (process.argv[2] == 'help' || process.argv[2] == '--help' || process.argv[2] == '-h'){
-  showHelp();
-}
-
-if (process.argv[2] == '--git' || process.argv[2] == 'git'){
-  if (path.existsSync(process.cwd() + '/.git')){
-    console.log('Starting node wiki in git mode');
-    start = true;
-  } else {
-    gitErr = true;
-    console.log('ERROR: no git repository found. To use the \'--git\' option, you need a git repository to be in the current directory. Type "git init" to create one.');
-  }
-}
-
-
+// Defaults
 var portNumber = 8888;
-var argPort = parseInt(process.argv[process.argv.length - 1]);
-if (typeof argPort == 'number' && argPort > 0){
-  if (!gitErr){
-    portNumber = parseInt(process.argv[process.argv.length - 1]);
-    console.log('starting node wiki on port ' + portNumber);
-    start = true;
+exports.gitMode = false;  // for lib/mdserver.js
+
+// Process command line
+var parser, option;
+parser = new mod_getopt.BasicParser('h(help)g(git)p:(port)', process.argv);
+
+while ((option = parser.getopt()) !== undefined) {
+
+  switch (option.option) {
+
+  case 'g':
+    if (fs.existsSync(process.cwd() + '/.git')){
+      console.log('Starting node wiki in git mode');
+      exports.gitMode = true;
+    } else {
+      console.log(
+        'ERROR: No git repository found\n',
+        '\'--git\' requires a git repository in the current directory.\n',
+        'Type "git init" to create one.');
+      process.exit(1);
+    }
+    // TODO: let lib/mdserver know that git mode is in effect
+    break;
+
+  case 'h':
+    showHelp();
+    process.exit(0);
+    break;
+
+  case 'p':
+    var argPort = parseInt(option.optarg);
+    if (typeof argPort == 'number' && argPort > 0){
+      portNumber = argPort;
+    } else {
+      console.log('ERROR: %s is not a valid port number.\n', option.optarg);
+      process.exit(1);
+    }
+    break;
+
+  default:
+    /* error message already emitted by getopt() */
+    console.assert('?' == option.option);
+    showUsage();
+    process.exit(1);
+    break;
   }
 }
 
 function showHelp(){
-  console.log('Node Wiki', '\n---------', '\nusage: nodewiki [--git] [--help]');
-  console.log('\nThe \'--git\' option automatically commits each save to a git repository');
+  console.log('Node Wiki', '\n---------');
+  showUsage();
 }
 
-// end CLI code
+function showUsage() {
+  console.log(
+    'usage: nodewiki [--git] [--help] [--port <portnumber>]\n',
+    '  -g | --git    Commit each save to a git repository\n',
+    '  -h | --help   Print this message\n',
+    '  -p | --port   Use the specified port'
+    );
+}
 
-if (start){
-  var app = connect();
-  app.use(connect.logger('dev'));
-  app.use(connect.static(__dirname + '/static'));
+// end of command line processing
 
-  app.use('/', function(req, res){
-    res.end(fs.readFileSync(__dirname + '/static/index.html', 'utf-8'));
+var app = connect();
+app.use(connect.logger('dev'));
+app.use(connect.static(__dirname + '/static'));
+
+app.use('/', function(req, res){
+  res.end(fs.readFileSync(__dirname + '/static/index.html', 'utf-8'));
+});
+
+var server = http.createServer(app);
+server.listen(process.env.PORT || portNumber);
+io = socketio.listen(server);
+io.set('log level', 2);
+
+io.sockets.on('connection', function (socket){
+  var currentPath = process.cwd() + '/';
+  var dir = getDir.getDir(currentPath);
+  var links = getDir.parseLinks(dir);
+  var directoryDepth = 0;
+
+  var dirFolders = []; // array to hold the names of all folders in current directory
+  dir.forEach(function(i){
+    if (i.folder == true){
+      dirFolders.push(i.name);
+    }
+  });
+  socket.emit('navLinks', {links: links});
+
+  socket.on('readFile', function (file){
+    console.log('readFile recieved - ' + file.name);
+    if(dirFolders.indexOf(file.name) > -1){ // checks if request is in the dirFolders array (meaning that the request is for a folder)
+      currentPath += file.name;
+      refreshDir();
+      directoryDepth += 1;
+      links = getDir.parseLinks(dir, directoryDepth);
+      mdserver.readFolder(links, socket);
+    } else {
+      mdserver.sendFile(file, currentPath, socket);
+    }
   });
 
-  var server = http.createServer(app);
-  server.listen(process.env.PORT || portNumber);
-  io = socketio.listen(server);
-  io.set('log level', 2);
-
-  io.sockets.on('connection', function (socket){
+  socket.on('disconnect', function(){
+    // if a user disconnects, reinitialise variables
     var currentPath = process.cwd() + '/';
-    var dir = getDir.getDir(currentPath);
+    refreshDir();
     var links = getDir.parseLinks(dir);
     var directoryDepth = 0;
+  });
 
-    var dirFolders = []; // array to hold the names of all folders in current directory
-    dir.forEach(function(i){
-      if (i.folder == true){
-        dirFolders.push(i.name);
-      }
-    });
-    socket.emit('navLinks', {links: links});
+  socket.on('saveFile', function (file){
+    console.log('saveFile recieved, file: ' + file.name);
+    mdserver.saveFile(file, currentPath, socket);
+  });
 
-    socket.on('readFile', function (file){
-      console.log('readFile recieved - ' + file.name);
-      if(dirFolders.indexOf(file.name) > -1){ // checks if request is in the dirFolders array (meaning that the request is for a folder)
-        currentPath += file.name;
-        refreshDir();
-        directoryDepth += 1;
-        links = getDir.parseLinks(dir, directoryDepth);
-        mdserver.readFolder(links, socket);
-      } else {
-        mdserver.sendFile(file, currentPath, socket);
-      }
-    });
-
-    socket.on('disconnect', function(){
-      // if a user disconnects, reinitialise variables
-      var currentPath = process.cwd() + '/';
+  socket.on('goBackFolder', function(){
+    if (directoryDepth > 0){
+      currentPath = currentPath.substr(0, currentPath.substr(0, currentPath.length - 1).lastIndexOf('/')) + '/'; // removes current directory form the currentPath variable
       refreshDir();
-      var links = getDir.parseLinks(dir);
-      var directoryDepth = 0;
-    });
+      directoryDepth -= 1;
+      links = getDir.parseLinks(dir, directoryDepth);
+      mdserver.readFolder(links, socket);
+    }
+  })
 
-    socket.on('saveFile', function (file){
-      console.log('saveFile recieved, file: ' + file.name);
-      mdserver.saveFile(file, currentPath, socket);
-    });
+  socket.on('refreshNav', function(){
+    refreshNavLinks();
+  });
 
-    socket.on('goBackFolder', function(){
-      if (directoryDepth > 0){
-        currentPath = currentPath.substr(0, currentPath.substr(0, currentPath.length - 1).lastIndexOf('/')) + '/'; // removes current directory form the currentPath variable
-        refreshDir();
-        directoryDepth -= 1;
-        links = getDir.parseLinks(dir, directoryDepth);
-        mdserver.readFolder(links, socket);
+  socket.on('newFolder', function(folderName){
+    fs.mkdir(currentPath + folderName, 0777, function(err){
+      if (err){
+        socket.emit('newFolderReply', err);
+      } else {
+        refreshNavLinks();
       }
-    })
-
-    socket.on('refreshNav', function(){
-      refreshNavLinks();
     });
+  });
 
-    socket.on('newFolder', function(folderName){
-      fs.mkdir(currentPath + folderName, 0777, function(err){
-        if (err){
-          socket.emit('newFolderReply', err);
-        } else {
-          refreshNavLinks();
+  function refreshNavLinks(){
+    refreshDir();
+    links = getDir.parseLinks(dir, directoryDepth);
+    socket.emit('navLinks', {links: links});
+  }
+
+  function refreshDir(){
+    dir = getDir.getDir(currentPath);
+    if (typeof dir != 'undefined'){
+      dir.forEach(function(i){
+        if (i.folder == true){
+          dirFolders.push(i.name);
         }
       });
-    });
-
-    function refreshNavLinks(){
-      refreshDir();
-      links = getDir.parseLinks(dir, directoryDepth);
-      socket.emit('navLinks', {links: links});
     }
+  }
 
-    function refreshDir(){
-      dir = getDir.getDir(currentPath);
-      if (typeof dir != 'undefined'){
-        dir.forEach(function(i){
-          if (i.folder == true){
-            dirFolders.push(i.name);
-          }
-        });
-      }
-    }
-
-  });
-  console.log("server started, port: " + portNumber);
-}
+});
+console.log("server started, port: " + portNumber);
