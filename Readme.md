@@ -41,44 +41,43 @@ highly recommended.
 `-a <IPv4_addr>`  
 `--addr=<IPv4_addr>`  
 `--addr <IPv4_addr>`  
-> Listen only on IPv4_addr. The listen address can also be specified by
-> defining NW_ADDR in the environment.
+Listen only on IPv4_addr. The listen address can also be specified by defining NW_ADDR in the environment.
 
 `-l`  
 `--local`  
-> localhost only. This is equivalent to `--addr=127.0.0.1`.
+Listen on localhost only. This is equivalent to `--addr=127.0.0.1`.
 
 `-g`  
 `--git`  
 `git` (depricated)  
-> Commit each save to a git repository.
+Commit each save to a git repository.
 
 `-h`  
 `--help`  
 `help` (depricated)  
-> Display a short help message.
+Display a short help message.
 
 `-p <port>`  
 `--port=<port>`  
 `--port <port>`  
 `<port>` (depricated)  
-> Listen on <port> rather than 8888. The default port can be changed
-> from 8888 by setting the PORT environment variable.
+Listen on <port> rather than 8888. The default port can be changed
+from 8888 by setting the PORT environment variable.
 
 ###Examples
 
-`nodewiki`
-> Starts node wiki
+`nodewiki`  
+Starts node wiki
 
-`nodewiki --git --local`
-> Starts node wiki in git mode, listening on only 127.0.0.1 (localhost).
+`nodewiki --git --local`  
+Starts node wiki in git mode, listening on only 127.0.0.1 (localhost).
 
-`nodewiki --git --local --port=9876`
-> Starts node wiki in git mode, listening on port 9876, of 127.0.0.1,
-> rather than the default port, 8888.
+`nodewiki --git --local --port=9876`  
+Starts node wiki in git mode, listening on port 9876, of 127.0.0.1,
+rather than the default port, 8888.
 
-`nodewiki -glp 9876`
-> Same as the above, but using short form options.
+`nodewiki -glp 9876`  
+Same as the above, but using short form options.
 
-`nodewiki --help`
->displays node wiki usage.
+`nodewiki --help`  
+Displays node wiki usage.
