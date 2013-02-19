@@ -10,7 +10,8 @@ var mdserver = require("./lib/mdserver");
 var getDir = require("./lib/getDir");
 
 // Defaults
-var portNumber = 8888;
+var portNumberDefault = 8888;
+var portNumber = portNumberDefault;
 exports.gitMode = false;  // for lib/mdserver.js
 
 // Process command line
@@ -23,7 +24,6 @@ while ((option = parser.getopt()) !== undefined) {
 
   case 'g':
     if (fs.existsSync(process.cwd() + '/.git')){
-      console.log('Starting node wiki in git mode');
       exports.gitMode = true;
     } else {
       console.log(
@@ -32,7 +32,6 @@ while ((option = parser.getopt()) !== undefined) {
         'Type "git init" to create one.');
       process.exit(1);
     }
-    // TODO: let lib/mdserver know that git mode is in effect
     break;
 
   case 'h':
@@ -73,6 +72,30 @@ function showUsage() {
     );
 }
 
+/*
+ * For backwards compatibility, handle argument style (no '--' or '-')
+ * options. Implmented for original options only: git, help, and <portNum>.
+ */
+for (var argn = parser.optind();
+     argn < process.argv.length;
+     argn++) {
+  var arg = process.argv[argn];
+
+  if (arg == "git") {
+    exports.gitMode = true;
+  } else if (arg == "help") {
+    showHelp();
+    process.exit(1);
+  } else if (typeof parseInt(arg) == 'number' && (arg = parseInt(arg)) > 0) {
+    if (portNumber != portNumberDefault) {
+      console.log("WARNING: Overriding previous port number, %d", portNumber);
+    }
+    portNumber = arg;
+  } else {
+    console.log("WARNING: Unknown argument: %s", arg);
+  }
+}
+  
 // end of command line processing
 
 var app = connect();
@@ -170,4 +193,7 @@ io.sockets.on('connection', function (socket){
   }
 
 });
+if (exports.gitMode == true) {
+  console.log('Using git mode.');
+}
 console.log("server started, port: " + portNumber);
