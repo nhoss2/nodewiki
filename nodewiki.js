@@ -10,17 +10,23 @@ var mdserver = require("./lib/mdserver");
 var getDir = require("./lib/getDir");
 
 // Defaults
-var portNumberDefault = 8888;
+var portNumberDefault = process.env.PORT || 8888;
+var listenAddr = process.env.NW_ADDR || "";    // "" ==> INADDR_ANY
+exports.gitMode = false;  // exported for lib/mdserver.js
+
 var portNumber = portNumberDefault;
-exports.gitMode = false;  // for lib/mdserver.js
 
 // Process command line
 var parser, option;
-parser = new mod_getopt.BasicParser('h(help)g(git)p:(port)', process.argv);
+parser = new mod_getopt.BasicParser('a:(addr)g(git)h(help)l(local)p:(port)', process.argv);
 
 while ((option = parser.getopt()) !== undefined) {
 
   switch (option.option) {
+
+  case 'a':
+    listenAddr = option.optarg;
+    break;
 
   case 'g':
     if (fs.existsSync(process.cwd() + '/.git')){
@@ -37,6 +43,15 @@ while ((option = parser.getopt()) !== undefined) {
   case 'h':
     showHelp();
     process.exit(0);
+    break;
+
+  case 'l':
+    if (listenAddr != "") {
+      console.log("ERROR: Conflicting use of --addr and --local.\n",
+                  "Use only one.");
+      process.exit(1);
+    }
+    listenAddr = "localhost";
     break;
 
   case 'p':
@@ -65,9 +80,11 @@ function showHelp(){
 
 function showUsage() {
   console.log(
-    'usage: nodewiki [--git] [--help] [--port <portnumber>]\n',
+    'usage: nodewiki [--addr=<addr> | --local] [--git] [--help] [--port=<portnumber>]\n',
+    '  -a | --addr   IPv4 listen address (default = any)\n',
     '  -g | --git    Commit each save to a git repository\n',
     '  -h | --help   Print this message\n',
+    '  -l | --local  Listen on "localhost" (127.0.0.1) only.\n',
     '  -p | --port   Use the specified port'
     );
 }
@@ -107,7 +124,7 @@ app.use('/', function(req, res){
 });
 
 var server = http.createServer(app);
-server.listen(process.env.PORT || portNumber);
+server.listen(portNumber, listenAddr);
 io = socketio.listen(server);
 io.set('log level', 2);
 
@@ -196,4 +213,8 @@ io.sockets.on('connection', function (socket){
 if (exports.gitMode == true) {
   console.log('Using git mode.');
 }
-console.log("server started, port: " + portNumber);
+if (listenAddr != "") {
+  console.log("server started, addr:port = %s:%s", listenAddr, portNumber);
+} else {
+  console.log("server started, port = " + portNumber);
+}
