@@ -130,85 +130,93 @@ io.set('log level', 2);
 
 io.sockets.on('connection', function (socket){
   var currentPath = process.cwd() + '/';
-  var dir = getDir.getDir(currentPath);
-  var links = getDir.parseLinks(dir);
-  var directoryDepth = 0;
-
-  var dirFolders = []; // array to hold the names of all folders in current directory
-  dir.forEach(function(i){
-    if (i.folder == true){
-      dirFolders.push(i.name);
-    }
-  });
-  socket.emit('navLinks', {links: links});
-
-  socket.on('readFile', function (file){
-    console.log('readFile recieved - ' + file.name);
-    if(dirFolders.indexOf(file.name) > -1){ // checks if request is in the dirFolders array (meaning that the request is for a folder)
-      currentPath += file.name;
-      refreshDir();
-      directoryDepth += 1;
-      links = getDir.parseLinks(dir, directoryDepth);
-      mdserver.readFolder(currentPath, links, socket);
-    } else {
-      mdserver.sendFile(file, currentPath, socket);
-    }
-  });
-
-  socket.on('disconnect', function(){
-    // if a user disconnects, reinitialise variables
-    var currentPath = process.cwd() + '/';
-    refreshDir();
+  getDir.getDir(currentPath, function(dir){
     var links = getDir.parseLinks(dir);
     var directoryDepth = 0;
-  });
 
-  socket.on('saveFile', function (file){
-    console.log('saveFile recieved, name: ' + file.name + ', alias: ' + file.alias);
-    mdserver.saveFile(file, currentPath, socket);
-  });
-
-  socket.on('goBackFolder', function(){
-    if (directoryDepth > 0){
-      currentPath = currentPath.substr(0, currentPath.substr(0, currentPath.length - 1).lastIndexOf('/')) + '/'; // removes current directory form the currentPath variable
-      refreshDir();
-      directoryDepth -= 1;
-      links = getDir.parseLinks(dir, directoryDepth);
-      mdserver.readFolder(currentPath, links, socket);
-    }
-  })
-
-  socket.on('refreshNav', function(){
-    refreshNavLinks();
-  });
-
-  socket.on('newFolder', function(folderName){
-    fs.mkdir(currentPath + folderName, 0777, function(err){
-      if (err){
-        socket.emit('newFolderReply', err);
-      } else {
-        refreshNavLinks();
+    var dirFolders = []; // array to hold the names of all folders in current directory
+    dir.forEach(function(i){
+      if (i.folder == true){
+        dirFolders.push(i.name);
       }
     });
-  });
-
-  function refreshNavLinks(){
-    refreshDir();
-    links = getDir.parseLinks(dir, directoryDepth);
     socket.emit('navLinks', {links: links});
-  }
 
-  function refreshDir(){
-    dir = getDir.getDir(currentPath);
-    if (typeof dir != 'undefined'){
-      dir.forEach(function(i){
-        if (i.folder == true){
-          dirFolders.push(i.name);
+    socket.on('readFile', function(file){
+      console.log('readFile received - ' + file.name);
+      if(dirFolders.indexOf(file.name) > -1){ // checks if request is in the dirFolders array (meaning that the request is for a folder)
+        currentPath += file.name;
+        refreshDir(function(){
+          directoryDepth += 1;
+          links = getDir.parseLinks(dir, directoryDepth);
+          mdserver.readFolder(currentPath, links, socket);
+        });
+      } else {
+        mdserver.sendFile(file, currentPath, socket);
+      }
+    });
+
+    socket.on('disconnect', function(){
+      // if a user disconnects, reinitialise variables
+      var currentPath = process.cwd() + '/';
+      refreshDir(function(){
+        var links = getDir.parseLinks(dir);
+        var directoryDepth = 0;
+      });
+    });
+
+    socket.on('saveFile', function (file){
+      console.log('saveFile recieved, name: ' + file.name + ', alias: ' + file.alias);
+      mdserver.saveFile(file, currentPath, socket);
+    });
+
+    socket.on('goBackFolder', function(){
+      if (directoryDepth > 0){
+        // removes current directory form the currentPath variable
+        currentPath = currentPath.substr(0, currentPath.substr(0, currentPath.length - 1).lastIndexOf('/')) + '/';
+        refreshDir(function(){
+          directoryDepth -= 1;
+          links = getDir.parseLinks(dir, directoryDepth);
+          mdserver.readFolder(currentPath, links, socket);
+        });
+      }
+    });
+
+    socket.on('refreshNav', function(){
+      refreshNavLinks();
+    });
+
+    socket.on('newFolder', function(folderName){
+      fs.mkdir(currentPath + folderName, 0777, function(err){
+        if (err){
+          socket.emit('newFolderReply', err);
+        } else {
+          refreshNavLinks();
         }
       });
-    }
-  }
+    });
 
+    function refreshNavLinks(){
+      refreshDir(function(){
+        links = getDir.parseLinks(dir, directoryDepth);
+        socket.emit('navLinks', {links: links});
+      });
+    }
+
+    function refreshDir(cb){
+      getDir.getDir(currentPath, function(newDir){
+        dir = newDir;
+        if (typeof dir != 'undefined'){
+          dir.forEach(function(i){
+            if (i.folder == true){
+              dirFolders.push(i.name);
+            }
+          });
+        }
+        cb();
+      });
+    }
+  });
 });
 if (exports.gitMode == true) {
   console.log('Using git mode.');
