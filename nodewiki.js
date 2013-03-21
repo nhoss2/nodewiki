@@ -149,7 +149,7 @@ io.sockets.on('connection', function (socket){
       refreshDir();
       directoryDepth += 1;
       links = getDir.parseLinks(dir, directoryDepth);
-      mdserver.readFolder(links, socket);
+      mdserver.readFolder(currentPath, links, socket);
     } else {
       mdserver.sendFile(file, currentPath, socket);
     }
@@ -164,7 +164,7 @@ io.sockets.on('connection', function (socket){
   });
 
   socket.on('saveFile', function (file){
-    console.log('saveFile recieved, file: ' + file.name);
+    console.log('saveFile recieved, name: ' + file.name + ', alias: ' + file.alias);
     mdserver.saveFile(file, currentPath, socket);
   });
 
@@ -174,7 +174,7 @@ io.sockets.on('connection', function (socket){
       refreshDir();
       directoryDepth -= 1;
       links = getDir.parseLinks(dir, directoryDepth);
-      mdserver.readFolder(links, socket);
+      mdserver.readFolder(currentPath, links, socket);
     }
   })
 
