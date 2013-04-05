@@ -1,4 +1,4 @@
-TODO:
+## TODO
 
    - have the ability to link to other files
    - have an alert that asks if user wants to save changes when they navigate away
@@ -7,12 +7,12 @@ TODO:
    - maybe have a better markdown editor
    - create public API
 
-BUGS:
+## BUGS
 
    - pressing escape disconnects socket connection (for firefox)
 
 
-FINISHED:
+## FINISHED
 
    - change design of back button
    - have the ability to create new .md file
