@@ -1,6 +1,6 @@
 {
   "name": "nodewiki",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Nafis Hossain <nhoss2@gmail.com>",
   "description": "A simple wiki that uses markdown files",
   "license": "MIT",
@@ -16,8 +16,9 @@
   "dependencies": {
     "connect": "2.3.x",
     "socket.io": "0.9.x",
-    "marked": "0.2.x",
-    "posix-getopt": "1.0.x"
+    "marked": "0.2.9",
+    "posix-getopt": "1.0.x",
+	"highlight.js": "7.3.x"
   },
   "repository": {
     "type": "git",
