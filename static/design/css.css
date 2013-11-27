@@ -164,7 +164,7 @@ code {
   box-shadow: 0px 0px 0px 1px #000000;
   overflow: hidden;
 }
-#navigation a.link {
+#navigation .link {
   color: #fff;
   text-decoration: none;
   padding: 10px 10px 10px 15px;
@@ -172,16 +172,20 @@ code {
   border-bottom: 1px solid #060606;
   border-top: 1px solid #353536;
 }
-#navigation a.link:first-child {
+#navigation .link:first-child {
   border-top: none;
   border-radius: 7px 0 0 0;
   -webkit-box-radius: 7px 0 0 0;
 }
-#navigation a.link:last-child {
+#navigation .link:last-child {
   border-bottom: none;
 }
-#navigation a.link code {
+#navigation .link code {
   font-size: 14px;
+}
+#navigation .empty {
+  color: #ececec;
+  font-style: italic;
 }
 #navigation a {
   outline: none;
