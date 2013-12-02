@@ -128,20 +128,25 @@ server.listen(portNumber, listenAddr);
 io = socketio.listen(server);
 io.set('log level', 2);
 
+var allFiles = null;
+
 io.sockets.on('connection', function (socket){
   var currentPath = process.cwd() + '/';
   var dir = getDir.getDir(currentPath);
   var links = getDir.parseLinks(dir);
   var directoryDepth = 0;
-
   var dirFolders = []; // array to hold the names of all folders in current directory
+  
   dir.forEach(function(i){
     if (i.folder == true){
       dirFolders.push(i.name);
     }
   });
   socket.emit('navLinks', {links: links});
-
+  
+  allFiles = getDir.getAllFiles(currentPath);
+  // console.log(allFiles);
+  
   socket.on('readFile', function (file){
     console.log('readFile recieved - ' + file.name);
     if(dirFolders.indexOf(file.name) > -1){ // checks if request is in the dirFolders array (meaning that the request is for a folder)
@@ -156,11 +161,11 @@ io.sockets.on('connection', function (socket){
   });
 
   socket.on('disconnect', function(){
-    // if a user disconnects, reinitialise variables
-    var currentPath = process.cwd() + '/';
+    // if a user disconnects, reset variables
+    currentPath = process.cwd() + '/';
     refreshDir();
-    var links = getDir.parseLinks(dir);
-    var directoryDepth = 0;
+    links = getDir.parseLinks(dir);
+    directoryDepth = 0;
   });
 
   socket.on('saveFile', function (file){
@@ -190,6 +195,22 @@ io.sockets.on('connection', function (socket){
         refreshNavLinks();
       }
     });
+  });
+  
+  // for each file within root directory, if it doesn't exist then throw it back at the client to deal with
+  socket.on('validateLinks', function(internalLinks){
+    var i, j, found, linkPath, fileName;
+    var missingLinks = [];
+    
+    for (i = 0; i < internalLinks.length; i++) {
+      linkPath = path.resolve(internalLinks[i]);
+      // console.log('[server on validateLinks] Checking '+linkPath);
+      if (!fs.existsSync(linkPath)) {
+        missingLinks.push(internalLinks[i]);
+        // console.log('[server on validateLinks] Did not exist');
+      } //else console.log('[server on validateLinks] Found);
+    }
+    socket.emit('validateLinksReply', {links: missingLinks});
   });
 
   function refreshNavLinks(){

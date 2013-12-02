@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
 
-  var rawMd, fileName;
+  var rawMd, fileName, internalLinks;
   var editingAllowed = false; //dont allow editing until something is loaded
 
   var socket = io.connect();
@@ -32,6 +32,7 @@ $(document).ready(function(){
     });
 
     socket.on('readFileReply', function(data){
+      var $content = $('#content #markdown_content');
       canSendReadFile = true;
       if (data.error.error == true){
         console.warn('error: ' + data.error.reason);
@@ -39,10 +40,10 @@ $(document).ready(function(){
         $('#notification').slideDown('fast', function(){
           window.setTimeout(function(){$('#notification').slideUp()}, 7000);
         });
-        $('#content #markdown_content').html('');
+        $content.html('');
         changeContentHeight();
       } else {
-        $('#content #markdown_content').html(data.fileContents);
+        $content.html(data.fileContents);
         $('#content #content_header h1').html(data.fileName);
         rawMd = data.rawMd;
         fileName = data.fileName;
@@ -51,6 +52,7 @@ $(document).ready(function(){
         showButtons(true);
         changeContentHeight();
         $('#notification').slideUp();
+        setupInternalLinks($content);
       }
     });
 
@@ -68,7 +70,24 @@ $(document).ready(function(){
       $('#content #markdown_content').html('');
       $('#content_header h1').html('Node Wiki');
       //editingAllowed = true;
-    })
+    });
+    
+    // does O(n^2) search to find the corresponding element to the url and marks it
+    // TODO: optimize! even though there's usually less than 10 per array, it will slow large files
+    socket.on('validateLinksReply', function(data){
+      var i, j, url, element, links = data.links,
+        ilen = links.length, jlen;
+      
+      internalLinks = $('.link-internal');
+      internalLinks.each(function() {
+        for (i = 0; i < ilen; i++) {
+          url = links[i];
+          if (links[i] === this.getAttribute('href')) {
+            this.classList.add('link-missing');
+          }
+        }
+      });
+    });
 
     ///////////////////////////////////////////////////////////
     // saving files
@@ -261,7 +280,6 @@ $(document).ready(function(){
     }
   }
 
-
   function changeContentHeight(){
     $('#content').height('auto');
     var offset = $('#content').offset();
@@ -275,5 +293,36 @@ $(document).ready(function(){
     }
   }
 
-
+  function setupInternalLinks($content) {
+    if (!!internalLinks) internalLinks.length = 0;
+    else internalLinks = [];
+    
+    $content.find('a').each(checkLink);
+    socket.emit('validateLinks', internalLinks);
+  }
+  
+  function checkLink(index) {
+    var url = this.getAttribute('href');
+    if (url.slice(0, 4) === 'http') {
+      this.classList.add('link-external'); // could use this selector to add an icon like other wikis do
+      return;
+    }
+    this.classList.add('link-internal');
+    
+    internalLinks.push(url);
+    $(this).on('click', onClickInternal);
+  }
+  
+  function onClickInternal(evt) {
+    if (this.classList.contains('link-missing')) {
+      // redirect to create file page
+    } else {
+      file = this.getAttribute('href');
+      console.log('clicked '+file);
+      // socket.emit('readFile', {name: file});
+    }
+    // stop propagation
+    return false;
+  }
+  
 });
