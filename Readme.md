@@ -36,6 +36,10 @@ http://localhost:8888/.
 If your computer is connected to a network, then the `--local` option is
 highly recommended.
 
+If you would like to use some other method of starting this application
+you can clone this repository and launch the application from this directory.
+E.g. `forever nodewiki.js -p 8888`
+
 
 ###Options
 `-a <IPv4_addr>`  
@@ -63,6 +67,11 @@ Display a short help message.
 `<port>` (depricated)  
 Listen on <port> rather than 8888. The default port can be changed
 from 8888 by setting the PORT environment variable.
+
+`-d <dir>`  
+`--dir=<dir>`  
+`--dir <dir>`   
+Directory to search for markdown files. Can be relative or absolute. 
 
 ###Examples
 
