@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NodeWiki</title>
+    <link rel='stylesheet' href='/css/style.css' />
+  </head>
+  <body>
+    <noscript>Sorry you need javascript for this application to work</noscript>
+  </body>
+</html>
