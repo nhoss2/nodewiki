@@ -2,9 +2,26 @@
 <html>
   <head>
     <title>NodeWiki</title>
-    <link rel='stylesheet' href='/css/style.css' />
+    <link rel='stylesheet' href='/css/css.css' />
   </head>
   <body>
     <noscript>Sorry you need javascript for this application to work</noscript>
+
+    <div id="sidebar">
+      <h1>NODEWIKI</h1>
+
+      <div id="pages-list">
+        <ul>
+        </ul>
+      </div>
+
+
+    </div><!-- sidebar -->
+
+    <div id="wiki-content">
+
+    </div><!-- wiki-content -->
+
+
   </body>
 </html>

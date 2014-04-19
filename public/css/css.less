@@ -1,0 +1,56 @@
+body{
+  background: #f8f8f8;
+  margin: 0;
+}
+
+@side: 300px;
+
+#sidebar{
+  position: absolute;
+  background: #494949;
+  border-right: 1px solid #494949;
+  top: 0;
+  bottom: 0;
+  width: @side;
+
+  h1{
+    font-family: Raleway, san-serif;
+    font-size: 26px;
+    font-weight: bold;
+    margin: 0;
+    padding: 20px;
+    background: #cfcfcf;
+    border-bottom: 1px solid #222;
+    color: #4e6a77;
+  }
+}
+
+#wiki-content{
+  float: left;
+  overflow: hidden;
+  margin-left: @side;
+  padding: 20px 40px 40px 40px;
+  max-width: 700px;
+
+  h1{
+    margin: 20px 0;
+    font-family: 'Roboto Slab', serif;
+    color: #6da378;
+  }
+
+  p{
+    margin: 10px 0;
+    font-family: "PT Sans", sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    color: #242424;
+  }
+}
+
+@import url(http://fonts.googleapis.com/css?family=Raleway:700);
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab);
+@import url(http://fonts.googleapis.com/css?family=PT+Sans);
+
+
+
+
