@@ -3,15 +3,21 @@
   <head>
     <title>Node Wiki</title>
     <link rel='stylesheet' href='/css/css.css' />
+    <script type="text/javascript" src="js/lib/angular.min.js"></script>
+    <script type="text/javascript" src="js/lib/angular-route.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
   </head>
   <body>
     <noscript>Sorry you need javascript for this application to work</noscript>
 
-    <div id="sidebar">
+    <div id="sidebar" ng-app="sideNav" ng-controller="navCtrl">
       <h1>NODEWIKI</h1>
 
       <div id="pages-list">
         <ul>
+          <li ng-repeat="item in files">
+            {{ item.name }}
+          </li>
         </ul>
       </div>
 

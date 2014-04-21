@@ -32,19 +32,31 @@ function NodeWiki(opts){
 NodeWiki.prototype.listFiles = function(callback){
   var self = this;
 
-  var iterator = function(file, callback){
-    if(self.allowedExtensions.indexOf(path.extname(file)) > -1){
-      callback(true)
-    } else {
-      callback(false);
-    }
+  var filteredFiles = [];
+
+  var filter = function(file, callback){
+    var filePath = path.join(self.currentDir.path, file);
+
+    fs.stat(filePath, function(err, stats){
+      if (err) throw err;
+
+      if (stats.isDirectory()){
+        filteredFiles.push({name: file, type: 'dir'});
+      } else if (self.allowedExtensions.indexOf(path.extname(file)) > -1 && stats.isFile()){
+        filteredFiles.push({name: file, type: 'file'});
+      }
+
+      callback(null);
+    });
   };
 
   fs.readdir(self.currentDir.path, function(err, files){
-    async.filter(files, iterator, function(resultFiles){
-      callback(resultFiles);
+    async.each(files, filter, function(err){
+      if (err) console.log('error with listing files:', err);
+      callback(filteredFiles);
     });
   });
+
 }
 
 module.exports = NodeWiki;
