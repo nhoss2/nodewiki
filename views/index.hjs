@@ -11,14 +11,11 @@
     <noscript>Sorry you need javascript for this application to work</noscript>
 
     <div id="sidebar" ng-app="sideNav" ng-controller="navCtrl">
-      <h1>NODEWIKI</h1>
+      <h1>NODE WIKI</h1>
 
       <div id="pages-list">
-        <ul>
-          <li ng-repeat="item in files">
-            {{ item.name }}
-          </li>
-        </ul>
+        <file-item ng-repeat="item in files | orderBy: 'name'" item="item" open="openItem(itemName)">
+        </file-item>
       </div>
 
 

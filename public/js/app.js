@@ -4,7 +4,12 @@
   var nav = angular.module('sideNav', []);
 
   nav.controller('navCtrl', ['$scope', 'files', function($scope, files){
-    $scope.eh = 'et';
+
+    $scope.openItem = function(itemName){
+      console.log(itemName);
+    }
+
+
     files.get(function(files){
       $scope.files = files;
     });
@@ -20,4 +25,22 @@
     }
   }]);
 
-})()
+  nav.directive('fileItem', function(){
+    return {
+      restrict: "E",
+      template: "{{ item.name }}",
+      scope: {
+        item: '=',
+        open: '&open'
+      },
+      link: function(scope, element, attrs){
+        element.on('click', function(e){
+          scope.open({itemName: scope.item.name});
+          e.preventDefault();
+          console.log('clicked');
+        });
+      }
+    }
+  });
+
+})();
