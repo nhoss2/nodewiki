@@ -7,10 +7,10 @@
     <script type="text/javascript" src="js/lib/angular-route.min.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
   </head>
-  <body>
+    <body ng-app="nodeWiki">
     <noscript>Sorry you need javascript for this application to work</noscript>
 
-    <div id="sidebar" ng-app="sideNav" ng-controller="navCtrl">
+    <div id="sidebar" ng-controller="navCtrl">
       <h1>NODE WIKI</h1>
 
       <div id="pages-list">
@@ -21,7 +21,8 @@
 
     </div><!-- sidebar -->
 
-    <div id="wiki-content">
+    <div id="wiki-content" ng-view>
+      <p>{{ hey }}</p>
 
     </div><!-- wiki-content -->
 
