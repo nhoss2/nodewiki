@@ -10,11 +10,12 @@
   "main": "nodewiki.js",
   "bin": "./nodewiki.js",
   "dependencies": {
-    "async": "^0.7.0",
+    "async": "^0.8.0",
     "body-parser": "~1.0.0",
-    "express": "~4.0.0",
+    "express": "~4.1.1",
     "hjs": "~0.0.6",
     "less-middleware": "0.1.15",
+    "marked": "^0.3.2",
     "posix-getopt": "1.0.x"
   },
   "repository": {
