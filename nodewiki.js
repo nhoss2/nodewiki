@@ -7,11 +7,6 @@ function NodeWiki(opts){
   opts = opts || {};
 
   this.config = opts.config || {};
-  this.app = require('./lib/create-express-app.js')();
-
-  var Routes = require('./lib/routes');
-  var routes = new Routes(this);
-  this.app.use('/', routes);
 
   this.rootDir = opts.rootDir || process.cwd();
 
@@ -25,6 +20,12 @@ function NodeWiki(opts){
   ];
 
   this.marked = require('marked');
+
+  this.app = require('./lib/create-express-app.js')();
+
+  var Routes = require('./lib/routes');
+  var routes = new Routes(this);
+  this.app.use('/', routes);
 
 }
 

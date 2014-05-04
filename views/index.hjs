@@ -14,8 +14,8 @@
       <h1>NODE WIKI</h1>
 
       <div id="pages-list">
-        <file-item ng-repeat="item in files | orderBy: 'name'" item="item" open="openItem(itemName)">
-        </file-item>
+        <a href="/#/w/{{item.name}}" file-item ng-repeat="item in files | orderBy: 'name'" item="item">
+        </a>
       </div>
 
 

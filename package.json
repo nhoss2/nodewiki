@@ -16,7 +16,9 @@
     "hjs": "~0.0.6",
     "less-middleware": "0.1.15",
     "marked": "^0.3.2",
-    "posix-getopt": "1.0.x"
+    "parseurl": "^1.0.1",
+    "posix-getopt": "1.0.x",
+    "serve-static": "^1.1.0"
   },
   "repository": {
     "type": "git",

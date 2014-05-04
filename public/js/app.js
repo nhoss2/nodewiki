@@ -19,20 +19,18 @@
   }]);
 
   wiki.config(['$locationProvider', function($locationProvider){
-    $locationProvider.html5Mode(true);
+    //TODO: get this working with express
+    //$locationProvider.html5Mode(true);
   }]);
 
-  wiki.controller('wikiCtrl', ['$scope', function($scope){
+  wiki.controller('wikiCtrl', ['$scope', '$routeParams', 'files', function($scope, $routeParams, files){
     $scope.hey = 'bro';
+    files.openLink($routeParams.path, function(data){
+      console.log(data);
+    });
   }]);
 
   nav.controller('navCtrl', ['$scope', 'files', function($scope, files){
-
-    $scope.openItem = function(itemName){
-      files.openLink(itemName, function(data){
-        console.log(data);
-      });
-    };
 
     files.ls(function(files){
       $scope.files = files;
@@ -59,11 +57,10 @@
 
   nav.directive('fileItem', function(){
     return {
-      restrict: "E",
-      template: "{{ item.display }}",
+      restrict: 'A',
+      template: '{{ item.display }}',
       scope: {
-        item: '=',
-        open: '&open'
+        item: '='
       },
       link: function(scope, element, attrs){
 
@@ -72,10 +69,6 @@
         } else {
           scope.item.display = scope.item.name;
         }
-        element.on('click', function(e){
-          scope.open({itemName: scope.item.name});
-          e.preventDefault();
-        });
       }
     }
   });
