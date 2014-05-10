@@ -29,7 +29,7 @@ function NodeWiki(opts){
 
 }
 
-NodeWiki.prototype.listFiles = function(callback){
+NodeWiki.prototype.listFiles = function(dir, callback){
   var self = this;
 
   var filteredFiles = [];

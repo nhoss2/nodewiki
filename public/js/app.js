@@ -6,7 +6,9 @@
     $routeProvider
       .when('/w/:path', {
         controller: 'wikiCtrl',
-        template: 'ehy'
+        templateUrl: function(location){
+          return '/api/raw/' + location.path;
+        }
       })
       .when('/w',{
         controller: 'wikiCtrl',
@@ -24,11 +26,22 @@
   }]);
 
   wiki.controller('wikiCtrl', ['$scope', '$routeParams', 'files', function($scope, $routeParams, files){
-    $scope.hey = 'bro';
-    files.openLink($routeParams.path, function(data){
-      console.log(data);
-    });
+    //files.getRaw($routeParams.path, function(file){
+    //  console.log(file);
+    //});
+    //files.openLink($routeParams.path, function(data){
+    //  console.log(data);
+    //});
   }]);
+
+  wiki.directive('marked', function(){
+    return {
+      restrict: 'A',
+      link: function(scope, element){
+        element[0].innerHTML = marked(element[0].innerHTML);
+      }
+    }
+  });
 
   nav.controller('navCtrl', ['$scope', 'files', function($scope, files){
 
@@ -49,7 +62,13 @@
       openLink: function(itemName, cb){
         $http.post('/api/navlink', {item: itemName})
         .success(function(data){
-          console.log(data);
+          cb(data);
+        });
+      },
+
+      getRaw: function(path, cb){
+        $http.get('/api/raw/' + path).success(function(data){
+          cb(data);
         });
       }
     }

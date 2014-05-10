@@ -10,4 +10,5 @@ FEATURES
 --------
 
   - Try out share.js for collaborative editing
+
   - Pressing f11 while on editor maximises editor
