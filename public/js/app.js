@@ -1,27 +1,40 @@
 (function(){
   var nav = angular.module('sideNav', []);
-  var wiki = angular.module('nodeWiki', ['ngRoute', 'sideNav']);
+  var wiki = angular.module('nodeWiki', ['ui.router', 'sideNav']);
 
-  wiki.config(['$routeProvider', function($routeProvider){
-    $routeProvider
-      .when('/w/:path', {
-        controller: 'wikiCtrl',
-        templateUrl: function(location){
-          return '/api/raw/' + location.path;
+  wiki.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider){
+    $stateProvider
+      .state('index', {
+        url: '/',
+        template: 'this is index'
+      })
+      .state('wikiPage', {
+        url: '/w/*page',
+        templateProvider: function($http, $q, files, $stateParams){
+          var deferred = $q.defer();
+
+          var requestedFile = $stateParams.page.substr($stateParams.page.lastIndexOf('/') + 1);
+
+          files.listFiles('/', function(files){
+            var checkedFile = files.filter(function(file){
+              return file.name == requestedFile
+            });
+
+            if (checkedFile.length > 0 && checkedFile[0].type == 'file'){
+              $http.get('/api/raw/' + checkedFile[0].name)
+              .success(function(data){
+                deferred.resolve(marked(data));
+              });
+            }
+          });
+
+          return deferred.promise;
         }
-      })
-      .when('/w',{
-        controller: 'wikiCtrl',
-        template: 'jey'
-      })
-      .otherwise({
-        redirectTo: '/w/',
       });
-
+      $urlRouterProvider.otherwise('/');
   }]);
 
   wiki.config(['$locationProvider', function($locationProvider){
-    //TODO: get this working with express
     //$locationProvider.html5Mode(true);
   }]);
 
@@ -34,6 +47,7 @@
     //});
   }]);
 
+  // this is a hacky way to convert markdown to html.
   wiki.directive('marked', function(){
     return {
       restrict: 'A',
@@ -45,31 +59,38 @@
 
   nav.controller('navCtrl', ['$scope', 'files', function($scope, files){
 
-    files.ls(function(files){
+    files.listFiles('/', function(files){
       $scope.files = files;
     });
 
   }]);
 
-  nav.factory('files', ['$http', function($http){
+  nav.factory('files', ['$http', '$q', function($http, $q){
+
+    var currentPath;
+    var dirContents;
+
+    var getDirContents = function(path, cb){
+      if (currentPath == path && dirContents){
+        return cb(dirContents);
+      } 
+
+      $http.get('/api/dir').success(function(data){
+        dirContents = data;
+        currentPath = path;
+        return cb(dirContents);
+      });
+    };
+
     return {
-      ls: function(cb){
-        $http.get('/api/dir').success(function(data){
-          cb(data);
-        });
-      },
+      listFiles: function(path, cb){
+        var deferred = $q.defer();
 
-      openLink: function(itemName, cb){
-        $http.post('/api/navlink', {item: itemName})
-        .success(function(data){
-          cb(data);
+        getDirContents('/', function(contents){
+          deferred.resolve(cb(contents));
         });
-      },
 
-      getRaw: function(path, cb){
-        $http.get('/api/raw/' + path).success(function(data){
-          cb(data);
-        });
+        return deferred.promise;
       }
     }
   }]);

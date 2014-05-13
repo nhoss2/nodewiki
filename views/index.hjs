@@ -4,7 +4,7 @@
     <title>Node Wiki</title>
     <link rel='stylesheet' href='/css/css.css' />
     <script type="text/javascript" src="js/lib/angular.min.js"></script>
-    <script type="text/javascript" src="js/lib/angular-route.min.js"></script>
+    <script type="text/javascript" src="js/lib/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="js/lib/marked.min.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
   </head>
@@ -22,7 +22,7 @@
 
     </div><!-- sidebar -->
 
-    <div id="wiki-content" marked ng-view>
+    <div id="wiki-content" ui-view>
 
     </div><!-- wiki-content -->
 
