@@ -29,8 +29,15 @@ function NodeWiki(opts){
 
 }
 
-NodeWiki.prototype.listFiles = function(dir, callback){
+NodeWiki.prototype.listFiles = function(dir, cb){
+
   var self = this;
+
+  // check if requested directory is within root directory of nodewiki
+  if (path.join(self.rootDir, dir).indexOf(self.rootDir) !== 0){
+    return cb(null);
+  }
+
 
   var filteredFiles = [];
 
@@ -53,7 +60,7 @@ NodeWiki.prototype.listFiles = function(dir, callback){
   fs.readdir(self.rootDir, function(err, files){
     async.each(files, filter, function(err){
       if (err) console.log('error with listing files:', err);
-      callback(filteredFiles);
+      cb(filteredFiles);
     });
   });
 
