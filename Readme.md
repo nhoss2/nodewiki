@@ -25,13 +25,13 @@ automatically does a git commit on each file save.
 
 Node Wiki can be started on any directory. To start it, simply type
 `nodewiki` in the directory that you want to start it in. Without any
-options, the URL for node wiki would be: http://<Hostname_or_IP>:8888/
+options, the URL for node wiki would be: http://<Hostname_or_IP>:3000/
 and any other computer on the network can access the wiki (subject to
 firewall settings).
 
 If you do not want other computers to be able to access node wiki, then
 use `--local` or `--port=127.0.0.1`. The URL for node wiki will then be
-http://localhost:8888/.
+http://localhost:3000/.
 
 If your computer is connected to a network, then the `--local` option is
 highly recommended.
@@ -61,8 +61,8 @@ Display a short help message.
 `--port=<port>`  
 `--port <port>`  
 `<port>` (depricated)  
-Listen on <port> rather than 8888. The default port can be changed
-from 8888 by setting the PORT environment variable.
+Listen on <port> rather than 3000. The default port can be changed
+from 3000 by setting the PORT environment variable.
 
 ###Examples
 
@@ -74,7 +74,7 @@ Starts node wiki in git mode, listening on only 127.0.0.1 (localhost).
 
 `nodewiki --git --local --port=9876`  
 Starts node wiki in git mode, listening on port 9876, of 127.0.0.1,
-rather than the default port, 8888.
+rather than the default port, 3000.
 
 `nodewiki -glp 9876`  
 Same as the above, but using short form options.
