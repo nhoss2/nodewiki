@@ -23,5 +23,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/nhoss2/nodewiki.git"
+  },
+  "devDependencies": {
+    "mocha": "^1.18.2"
   }
 }
