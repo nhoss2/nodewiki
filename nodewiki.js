@@ -8,6 +8,15 @@ function NodeWiki(opts){
 
   this.config = opts.config || {};
 
+  if (opts.rootDir){
+    try {
+      fs.statSync(opts.rootDir);
+    } catch (err){
+      if (err.code == 'ENOENT'){
+        throw new TypeError('root directory does not exist');
+      }
+    }
+  }
   this.rootDir = opts.rootDir || process.cwd();
 
   this.allowedExtensions = [
@@ -35,9 +44,8 @@ NodeWiki.prototype.listFiles = function(dir, cb){
 
   // check if requested directory is within root directory of nodewiki
   if (path.join(self.rootDir, dir).indexOf(self.rootDir) !== 0){
-    return cb(null);
+    return cb('error');
   }
-
 
   var filteredFiles = [];
 
@@ -59,8 +67,11 @@ NodeWiki.prototype.listFiles = function(dir, cb){
 
   fs.readdir(self.rootDir, function(err, files){
     async.each(files, filter, function(err){
-      if (err) console.log('error with listing files:', err);
-      cb(filteredFiles);
+      if (err){
+        return cb('error with listing files');
+      }
+
+      cb(null, filteredFiles);
     });
   });
 
