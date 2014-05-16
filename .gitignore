@@ -1,4 +1,2 @@
 node_modules
-npm-debug.log
-*~
-*.swp
+public/css/css.css
