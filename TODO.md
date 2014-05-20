@@ -12,3 +12,8 @@ FEATURES
   - Try out share.js for collaborative editing
 
   - Pressing f11 while on editor maximises editor
+
+  - Maybe have a preview split pane. When editing, the preview should be
+    scrolled to where you are editing. Also, when you click edit and arent at
+    the top of the file, the editor should start so that the preview is in the
+    same position as when you clicked edit.
