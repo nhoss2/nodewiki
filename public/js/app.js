@@ -25,18 +25,23 @@
              * This view is used to load a file based on the current URL. It then
              * parses the file and returns the html
              */
-            templateProvider: ['$http', '$q', 'files', '$stateParams', 'url', function($http, $q, files, $stateParams, url){
+            templateProvider: ['$http', '$q', 'files', 'url', function($http, $q, files, url){
               var deferred = $q.defer();
 
-              var requestedFile = $stateParams.page.substr($stateParams.page.lastIndexOf('/') + 1);
+              var requestedFile = url.getFile();
+              var currentDir = url.getPath();
 
-              files.listFiles(url.getPath(), function(files){
+              if (requestedFile === null){
+                return '';
+              }
+
+              files.listFiles(currentDir, function(files){
                 var checkedFile = files.filter(function(file){
                   return file.name == requestedFile;
                 });
 
                 if (checkedFile.length > 0 && checkedFile[0].type == 'file'){
-                  $http.get('/api/raw/' + url.getPath() + checkedFile[0].name)
+                  $http.get('/api/raw/' + currentDir + checkedFile[0].name)
                   .success(function(data){
                     deferred.resolve(marked(data));
                   });
@@ -77,7 +82,14 @@
       getPath: function(){
         var path = $location.path();
         return path.substring(2, path.lastIndexOf('/') + 1);
-      }
+      },
+
+      getFile: function(){
+        var path = $location.path();
+        if (path.lastIndexOf('/') + 1 == path.length) return null;
+        return path.substr(path.lastIndexOf('/') + 1);
+      },
+
     }
   }]);
 
@@ -86,11 +98,8 @@
     var currentPath = url.getPath();
     $scope.currentPath = currentPath;
 
-    console.log(currentPath);
-
     files.listFiles(currentPath, function(files){
       $scope.files = files;
-      console.log(files);
     });
 
   }]);
