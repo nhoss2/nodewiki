@@ -18,8 +18,14 @@ describe('directory listings', function(){
     var app = new Nodewiki({rootDir: fixtures});
 
     app.listFiles('/', function(err, files){
+      assert.equal(err, null);
+      assert.equal(files.length, 2);
+    });
+
+    app.listFiles('/subdir', function(err, files){
+      assert.equal(err, null);
       assert.equal(files.length, 1);
-      assert.equal(files[0].name, 'test.md');
+      assert.equal(files[0].name, 'hi.md');
       assert.equal(files[0].type, 'file');
     });
   });

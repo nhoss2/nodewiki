@@ -11,18 +11,15 @@
     <body ng-app="nodeWiki">
     <noscript>Sorry you need javascript for this application to work</noscript>
 
-    <div id="sidebar" ng-controller="navCtrl">
+    <div id="sidebar" >
       <h1>NODE WIKI</h1>
 
-      <div id="pages-list">
-        <a href="/#/w/{{item.name}}" file-item ng-repeat="item in files | orderBy: 'name'" item="item">
-        </a>
+      <div id="pages-list" ui-view="sidebar">
       </div>
-
 
     </div><!-- sidebar -->
 
-    <div id="wiki-content" ui-view>
+    <div id="wiki-content" ui-view="wiki">
 
     </div><!-- wiki-content -->
 
