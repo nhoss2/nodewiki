@@ -59,7 +59,7 @@
              * The current directory is determined by the what the URL path is.
              */
             controller: 'navCtrl',
-            template: '<a href="#/w{{ currentPath }}{{item.name}}" ng-repeat="item in files | orderBy: \'name\'">{{ item.name }}</a>'
+            template: '<a class="path" href="#/w{{ path.link }}" ng-repeat="path in paths">{{ path.name }}</a><a class="entity" href="#/w{{ currentPath }}{{item.name}}" ng-repeat="item in files | orderBy: \'name\'">{{ item.name }}</a>'
           }
         }
       });
@@ -86,9 +86,17 @@
 
       getFile: function(){
         var path = $location.path();
-        if (path.lastIndexOf('/') + 1 == path.length) return null;
+        if (path[path.length - 1] === '/') return null;
         return path.substr(path.lastIndexOf('/') + 1);
       },
+
+      listDirectories: function(){
+        var path = $location.path().split('/');
+
+        // the start of slice is 2 as the first element in the array is "" and
+        // the second is "w".
+        return path.slice(2, path.length - 1);
+      }
 
     }
   }]);
@@ -97,6 +105,18 @@
 
     var currentPath = url.getPath();
     $scope.currentPath = currentPath;
+
+    var dirList = url.listDirectories();
+    var paths = [{name: '/', link: '/'}];
+
+    dirList.forEach(function(dir, i){
+      paths.push({
+        name: dir + '/',
+        link: '/' + dirList.slice(0, i+1).join('/') + '/'
+      });
+    });
+
+    $scope.paths = paths;
 
     files.listFiles(currentPath, function(files){
       $scope.files = files;
