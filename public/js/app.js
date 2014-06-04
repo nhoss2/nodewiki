@@ -23,34 +23,22 @@
           wiki: {
             /*
              * This view is used to load a file based on the current URL. It then
-             * parses the file and returns the html
+             * parses the file and displays the html
              */
-            templateProvider: ['$http', '$q', 'files', 'url', function($http, $q, files, url){
+            templateProvider: ['$q', 'currentPage', function($q, currentPage){
               var deferred = $q.defer();
 
-              var requestedFile = url.getFile();
-              var currentDir = url.getPath();
-
-              if (requestedFile === null){
-                return '';
-              }
-
-              files.listFiles(currentDir, function(files){
-                var checkedFile = files.filter(function(file){
-                  return file.name == requestedFile;
-                });
-
-                if (checkedFile.length > 0 && checkedFile[0].type == 'file'){
-                  $http.get('/api/raw/' + currentDir + checkedFile[0].name)
-                  .success(function(data){
-                    deferred.resolve(marked(data));
-                  });
+              currentPage.getRaw(function(err, raw){
+                if (err === null){
+                  deferred.resolve(marked(raw));
                 } else {
-                  return deferred.resolve('Error');
+                  deferred.resolve('Error, ' + err);
                 }
               });
 
+
               return deferred.promise;
+
             }]
           },
           sidebar: {
@@ -153,6 +141,53 @@
         return deferred.promise;
       }
     }
+  }]);
+
+  nav.factory('currentPage', ['$http', '$q', 'files', 'url', function($http, $q, files, url){
+
+    var raw;
+    var rawPath;
+
+    return {
+      /*
+       * param: function(error, rawFile)
+       */
+      getRaw: function(cb){
+
+        var requestedFile = url.getFile();
+        var currentDir = url.getPath();
+
+        if (rawPath === currentDir + requestedFile){
+          console.log('sending raw', raw);
+          return cb(null, raw);
+        }
+
+        // at root of directory so render nothing
+        if (requestedFile === null){
+          return cb(null, '');
+        }
+
+        files.listFiles(currentDir, function(files){
+
+          // check if requested file is in current directory
+          var checkedFile = files.filter(function(file){
+            return file.name == requestedFile;
+          });
+
+          if (checkedFile.length > 0 && checkedFile[0].type == 'file'){
+            $http.get('/api/raw/' + currentDir + checkedFile[0].name)
+            .success(function(data){
+              raw = data;
+              rawPath = currentDir + requestedFile;
+              return cb(null, data);
+            });
+          } else {
+            return cb('File not found');
+          }
+        });
+      }
+    }
+
   }]);
 
 })();
