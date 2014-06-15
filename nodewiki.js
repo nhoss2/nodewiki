@@ -13,12 +13,12 @@ var getDir = require("./lib/getDir");
 var portNumberDefault = process.env.PORT || 8888;
 var listenAddr = process.env.NW_ADDR || "";    // "" ==> INADDR_ANY
 exports.gitMode = false;  // exported for lib/mdserver.js
-
+var runDir = "";
 var portNumber = portNumberDefault;
 
 // Process command line
 var parser, option;
-parser = new mod_getopt.BasicParser('a:(addr)g(git)h(help)l(local)p:(port)', process.argv);
+parser = new mod_getopt.BasicParser('a:(addr)g(git)h(help)l(local)p:(port)d:(dir)', process.argv);
 
 while ((option = parser.getopt()) !== undefined) {
 
@@ -64,6 +64,14 @@ while ((option = parser.getopt()) !== undefined) {
     }
     break;
 
+  case 'd':
+    runDir = option.optarg;
+    if (!fs.existsSync(runDir)) {
+      console.log('ERROR: %s is not a valid directory.\n', runDir);
+      process.exit(1);
+    }
+    break;
+
   default:
     /* error message already emitted by getopt() */
     console.assert('?' == option.option);
@@ -80,12 +88,13 @@ function showHelp(){
 
 function showUsage() {
   console.log(
-    'usage: nodewiki [--addr=<addr> | --local] [--git] [--help] [--port=<portnumber>]\n',
+    'usage: nodewiki [--addr=<addr> | --local] [--git] [--help] [--port=<portnumber>] [--dir]\n',
     '  -a | --addr   IPv4 listen address (default = any)\n',
     '  -g | --git    Commit each save to a git repository\n',
     '  -h | --help   Print this message\n',
-    '  -l | --local  Listen on "localhost" (127.0.0.1) only.\n',
-    '  -p | --port   Use the specified port'
+    '  -l | --local  Listen on "localhost" (127.0.0.1) only\n',
+    '  -p | --port   Use the specified port',
+    '  -d | --dir    Directory containing markup files'
     );
 }
 
@@ -129,7 +138,9 @@ io = socketio.listen(server);
 io.set('log level', 2);
 
 io.sockets.on('connection', function (socket){
-  var currentPath = process.cwd() + '/';
+  var currentPath = runDir || process.cwd();
+  currentPath = fs.realpathSync(currentPath) + '/';
+  console.log('current path' + currentPath);
   var dir = getDir.getDir(currentPath);
   var links = getDir.parseLinks(dir);
   var directoryDepth = 0;
