@@ -3,9 +3,22 @@ $(document).ready(function(){
 
   var rawMd, fileName;
   var editingAllowed = false; //dont allow editing until something is loaded
+  var config;
+  window.location.hash = window.location.hash || '/';
 
   var socket = io.connect();
   socket.on('connect', function(){
+    // open the hash given by the browser
+    var parts = window.location.hash.match(/[^\/]+\/?/g);
+    parts.shift();
+    parts.forEach(function(part) {
+      socket.emit('readFile', {name: part});
+    });
+
+    socket.on('config', function (data){
+      config = data;
+    });
+
     socket.on('navLinks', function (data){
       $('#navigation').html(data.links);
       changeContentHeight();
@@ -19,6 +32,10 @@ $(document).ready(function(){
       if (canSendReadFile == true){
         canSendReadFile = false;
         socket.emit('readFile', {name: $(a.currentTarget).text()});
+        if (!window.location.hash.match(/\/$/)) {
+          window.location.hash = dirname(window.location.hash) + '/';
+        }
+        window.location.hash += $(a.currentTarget).text();
         $('#navigation').children().attr('class', 'link');
         $('#content #markdown_content').html('<em>Loading...</em>');
         $('#content_header h1').html('Node Wiki');
@@ -29,6 +46,7 @@ $(document).ready(function(){
           cancelNewFile();
         }
       }
+      return false;
     });
 
     socket.on('readFileReply', function(data){
@@ -65,6 +83,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#navigation a#go_back', function(){
       socket.emit('goBackFolder');
+      window.location.hash = dirname(window.location.hash) + '/';
       $('#content #markdown_content').html('');
       $('#content_header h1').html('Node Wiki');
       //editingAllowed = true;
@@ -250,7 +269,7 @@ $(document).ready(function(){
 
   function showButtons(show, newFile){
     var buttons = '<a id="edit" href="#">Edit</a>\n<a id="save" href="#">Save</a>';
-    if (show){
+    if (show && !config.readonly){
       if (newFile){
         $('#edit_save_buttons').html('<a id="cancel" href="#">Cancel</a>\n<a id="save" href="#">Save</a>');
       } else {
@@ -275,5 +294,8 @@ $(document).ready(function(){
     }
   }
 
+  function dirname(path) {
+    return path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');;
+  }
 
 });
