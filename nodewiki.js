@@ -13,12 +13,13 @@ var getDir = require("./lib/getDir");
 var portNumberDefault = process.env.PORT || 8888;
 var listenAddr = process.env.NW_ADDR || "";    // "" ==> INADDR_ANY
 exports.gitMode = false;  // exported for lib/mdserver.js
+exports.readonly = false;
 
 var portNumber = portNumberDefault;
 
 // Process command line
 var parser, option;
-parser = new mod_getopt.BasicParser('a:(addr)g(git)h(help)l(local)p:(port)', process.argv);
+parser = new mod_getopt.BasicParser('a:(addr)g(git)h(help)l(local)p:(port)r(readonly)', process.argv);
 
 while ((option = parser.getopt()) !== undefined) {
 
@@ -62,6 +63,10 @@ while ((option = parser.getopt()) !== undefined) {
       console.log('ERROR: %s is not a valid port number.\n', option.optarg);
       process.exit(1);
     }
+    break;
+
+  case 'r':
+    exports.readonly = true;
     break;
 
   default:
@@ -129,7 +134,9 @@ io = socketio.listen(server);
 io.set('log level', 2);
 
 io.sockets.on('connection', function (socket){
-  var currentPath = process.cwd() + '/';
+  socket.emit('config', exports);
+
+  var currentPath = './';
   var dir = getDir.getDir(currentPath);
   var links = getDir.parseLinks(dir);
   var directoryDepth = 0;

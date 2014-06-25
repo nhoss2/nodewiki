@@ -64,6 +64,10 @@ Display a short help message.
 Listen on <port> rather than 8888. The default port can be changed
 from 8888 by setting the PORT environment variable.
 
+`-r`
+`--readonly`
+Disable read/write operations from the web interface
+
 ###Examples
 
 `nodewiki`  
