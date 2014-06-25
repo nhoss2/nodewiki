@@ -9,6 +9,7 @@ $(document).ready(function(){
     socket.on('navLinks', function (data){
       $('#navigation').html(data.links);
       changeContentHeight();
+      loadIndex();
     });
 
     ///////////////////////////////////////////////////////////
@@ -61,6 +62,7 @@ $(document).ready(function(){
       editingAllowed = false;
       creatingNewFile = false;
       showButtons(false);
+      loadIndex();
     });
 
     $(document).on('click', '#navigation a#go_back', function(){
@@ -275,5 +277,13 @@ $(document).ready(function(){
     }
   }
 
+  function loadIndex() {
+    // check for a index.md page and click it
+    $('#navigation a.link').each(function() {
+      var $this = $(this);
+      if ($this.text() === 'index.md')
+      $this.click();
+    });
+  }
 
 });
