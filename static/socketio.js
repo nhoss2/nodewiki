@@ -9,6 +9,7 @@ $(document).ready(function(){
     socket.on('navLinks', function (data){
       $('#navigation').html(data.links);
       changeContentHeight();
+      loadIndex();
     });
 
     ///////////////////////////////////////////////////////////
@@ -61,6 +62,7 @@ $(document).ready(function(){
       editingAllowed = false;
       creatingNewFile = false;
       showButtons(false);
+      loadIndex();
     });
 
     $(document).on('click', '#navigation a#go_back', function(){
@@ -215,12 +217,12 @@ $(document).ready(function(){
     $(document).on('click', '#navigation a#save_folder', function(){
       createFolder();
     });
-    
+
 
     $('#navigation').submit(function(){
       createFolder();
     });
-    
+
 
     function cancelNewFolder(){
       if (creatingNewFolder){
@@ -239,20 +241,20 @@ $(document).ready(function(){
         window.setTimeout(function(){$('#notification').slideUp()}, 4000);
       });
     });
-   
+
 
   });
- 
+
 
   ///////////////////////////////////////////////////////////
   // functions for the layout
   ///////////////////////////////////////////////////////////
 
-  function showButtons(show, newFile){
-    var buttons = '<a id="edit" href="#">Edit</a>\n<a id="save" href="#">Save</a>';
+  function showButtons(show, newFile){ /* added button classes for bootstrap */
+    var buttons = '<a id="edit" href="#" class="btn btn-success">Edit</a>\n<a id="save" href="#" class="btn btn-success">Save</a>';
     if (show){
       if (newFile){
-        $('#edit_save_buttons').html('<a id="cancel" href="#">Cancel</a>\n<a id="save" href="#">Save</a>');
+        $('#edit_save_buttons').html('<a id="cancel" href="#" class="btn btn-danger">Cancel</a>\n<a id="save" href="#" class="btn btn-success">Save</a>');
       } else {
         $('#edit_save_buttons').html(buttons);
       }
@@ -274,6 +276,13 @@ $(document).ready(function(){
       $('#content').height($('#navigation').height() + 20 + 'px');
     }
   }
-
+  function loadIndex() {
+    // check for a index.md page and click it
+    $('#navigation a.link').each(function() {
+      var $this = $(this);
+      if ($this.text() === 'index.md')
+      $this.click();
+    });
+  }
 
 });
