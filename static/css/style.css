@@ -1,19 +1,21 @@
 html,
 body {
+  background: url('../design/nodebg.jpg') repeat-x fixed top center #67311a;
+  font-size:100%;
   overflow-x: hidden; /* Prevent scroll on narrow devices */
-}
-body {
-  /*padding-top: 70px;*/
 }
 header {
   position:relative;
   top:20px;
   left:20px;
   padding-bottom:15px;
+  color:#f9f9f9;
 }
 footer {
+  color:#f9f9f9;
   padding-left:20px;
   padding-right: 20px;
+  font-size:75%;
 }
 footer a {
   font-style: italic;
@@ -24,7 +26,7 @@ footer hr {
 #content #content_header #edit_save_buttons {
   float: right;
   font-size: 16px;
-  margin-top:-40px;
+  margin-top:-23px;
 }
 #content textarea {
   width: 100%;
@@ -32,17 +34,20 @@ footer hr {
 }
 
 #navigation {
+  z-index:1337;
 }
 #navigation ul {
-  padding-top:40px;
-  margin-left:-35px;
-  list-style-type:none;
+  padding-top:10px;
+  margin-left:-5px;
 }
 #navigation li {
+    word-wrap: break-word;
 }
 #navigation a.link {
+  color:#f0f0f0;
     display:block;
     padding-top:5px;
+    word-wrap: break-word;
 }
 #navigation #temp_new_folder {
     margin-top:20px;
@@ -53,18 +58,21 @@ footer hr {
 }
 
 #navigation #tri_buttons {
-  margin-top:20px;
-  /*background: #242425;*/
-  /*text-align: center;*/
+  margin-top:-5px;
+  background-color:#000;
+  border-bottom: 1px solid #999;
 }
 #navigation #tri_buttons ul:after {
   content: '\a';
   white-space: pre;
 }
 #navigation #tri_buttons ul {
+  list-style-type:none;
   padding:0;
   margin:0;
-  margin-left:0;
+  padding-top:10px;
+  padding-bottom:15px;
+  margin-left:10px;
 }
 #navigation #tri_buttons li {
     float:left;
@@ -72,9 +80,6 @@ footer hr {
 #navigation #tri_buttons a {
   display:block;
   margin-right:5px;
-    /*margin-top:20px;
-    /*color:blue;
-    /*padding:10px;*/
 }
 
 #navigation #tri_buttons a#go_back_inactive,
@@ -82,6 +87,17 @@ footer hr {
 #navigation #tri_buttons a#new_folder_inactive {
   display:none;
   color: #333;
+}
+.panel-default {
+  margin-top:20px;
+}
+.panel-nav {
+  padding-top:5px;
+  background-color:#2b2b2b;
+  color:#f0f0f0;
+  border:none;
+  padding-bottom:10px;
+  padding-right:10px;
 }
 /*
  * Menu
