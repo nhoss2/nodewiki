@@ -3,9 +3,23 @@ body {
   overflow-x: hidden; /* Prevent scroll on narrow devices */
 }
 body {
-  padding-top: 70px;
+  /*padding-top: 70px;*/
+}
+header {
+  position:relative;
+  top:20px;
+  left:20px;
+  padding-bottom:15px;
 }
 footer {
+  padding-left:20px;
+  padding-right: 20px;
+}
+footer a {
+  font-style: italic;
+}
+footer hr {
+  width:100%;
 }
 #content #content_header #edit_save_buttons {
   float: right;
@@ -18,11 +32,17 @@ footer {
 }
 
 #navigation {
-  margin-top: 60px;
+}
+#navigation ul {
+  padding-top:40px;
+  margin-left:-35px;
+  list-style-type:none;
+}
+#navigation li {
 }
 #navigation a.link {
     display:block;
-    padding-bottom:5px;
+    padding-top:5px;
 }
 #navigation #temp_new_folder {
     margin-top:20px;
@@ -34,13 +54,34 @@ footer {
 
 #navigation #tri_buttons {
   margin-top:20px;
-  background: #242425;
-  text-align: center;
+  /*background: #242425;*/
+  /*text-align: center;*/
+}
+#navigation #tri_buttons ul:after {
+  content: '\a';
+  white-space: pre;
+}
+#navigation #tri_buttons ul {
+  padding:0;
+  margin:0;
+  margin-left:0;
+}
+#navigation #tri_buttons li {
+    float:left;
 }
 #navigation #tri_buttons a {
-    margin-top:20px;
-    color:white;
-    padding:10px;
+  display:block;
+  margin-right:5px;
+    /*margin-top:20px;
+    /*color:blue;
+    /*padding:10px;*/
+}
+
+#navigation #tri_buttons a#go_back_inactive,
+#navigation #tri_buttons a#new_file_inactive,
+#navigation #tri_buttons a#new_folder_inactive {
+  display:none;
+  color: #333;
 }
 /*
  * Menu
