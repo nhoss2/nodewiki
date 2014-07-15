@@ -18,7 +18,15 @@ footer {
   font-size:75%;
 }
 footer a {
+  color:#f9f9f9;
+  text-decoration: underline;
   font-style: italic;
+  padding: 3px 5px 5px 5px;
+}
+footer a:hover {
+  text-decoration: none;
+  color:#fff;
+  background-color:#000;
 }
 footer hr {
   width:100%;
@@ -97,7 +105,6 @@ footer hr {
   color:#f0f0f0;
   border:none;
   padding-bottom:10px;
-  padding-right:10px;
 }
 /*
  * Menu
