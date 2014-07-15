@@ -2,7 +2,7 @@
 
 A simple git based wiki system for markdown files written in node.js.
 
-[![screenshot](https://raw.github.com/nhoss2/nodewiki/d02b3596876d712f839f027204f6c488c8d90f42/static/screenshot.jpg)](http://github.com/nhoss2/nodewiki)
+[![screenshot](https://raw.githubusercontent.com/besker/nodewiki/master/static/screenshot_new.jpg)](http://github.com/besker/nodewiki)
 ##What it does
 
 This is a simple wiki system that uses markdown (text) files as its

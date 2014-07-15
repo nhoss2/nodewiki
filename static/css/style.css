@@ -1,0 +1,152 @@
+html,
+body {
+  background: url('../design/nodebg.jpg') repeat-x fixed top center #67311a;
+  font-size:100%;
+  overflow-x: hidden; /* Prevent scroll on narrow devices */
+}
+header {
+  position:relative;
+  top:20px;
+  left:20px;
+  padding-bottom:15px;
+  color:#f9f9f9;
+}
+footer {
+  color:#f9f9f9;
+  padding-left:20px;
+  padding-right: 20px;
+  font-size:75%;
+}
+footer a {
+  color:#f9f9f9;
+  text-decoration: underline;
+  font-style: italic;
+  padding: 3px 5px 5px 5px;
+}
+footer a:hover {
+  text-decoration: none;
+  color:#fff;
+  background-color:#000;
+}
+footer hr {
+  width:100%;
+}
+#content #content_header #edit_save_buttons {
+  float: right;
+  font-size: 16px;
+  margin-top:-23px;
+}
+#content textarea {
+  width: 100%;
+  height: 500px;
+}
+
+#navigation {
+  z-index:1337;
+}
+#navigation ul {
+  padding-top:10px;
+  margin-left:-5px;
+}
+#navigation li {
+    word-wrap: break-word;
+}
+#navigation a.link {
+  color:#f0f0f0;
+    display:block;
+    padding-top:5px;
+    word-wrap: break-word;
+}
+#navigation #temp_new_folder {
+    margin-top:20px;
+}
+#navigation #temp_new_folder input {
+  width: 100%;
+  padding: 4px;
+}
+
+#navigation #tri_buttons {
+  margin-top:-5px;
+  background-color:#000;
+  border-bottom: 1px solid #999;
+}
+#navigation #tri_buttons ul:after {
+  content: '\a';
+  white-space: pre;
+}
+#navigation #tri_buttons ul {
+  list-style-type:none;
+  padding:0;
+  margin:0;
+  padding-top:10px;
+  padding-bottom:15px;
+  margin-left:10px;
+}
+#navigation #tri_buttons li {
+    float:left;
+}
+#navigation #tri_buttons a {
+  display:block;
+  margin-right:5px;
+}
+
+#navigation #tri_buttons a#go_back_inactive,
+#navigation #tri_buttons a#new_file_inactive,
+#navigation #tri_buttons a#new_folder_inactive {
+  display:none;
+  color: #333;
+}
+.panel-default {
+  margin-top:20px;
+}
+.panel-nav {
+  padding-top:5px;
+  background-color:#2b2b2b;
+  color:#f0f0f0;
+  border:none;
+  padding-bottom:10px;
+}
+/*
+ * Menu
+ * --------------------------------------------------
+ */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+         -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-left {
+    left: 0;
+  }
+
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    left: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-right.active {
+    right: 50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left.active {
+    left: 50%; /* 6 columns */
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 50%; /* 6 columns */
+  }
+}

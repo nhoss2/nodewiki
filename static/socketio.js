@@ -9,6 +9,7 @@ $(document).ready(function(){
     socket.on('navLinks', function (data){
       $('#navigation').html(data.links);
       changeContentHeight();
+      loadIndex();
     });
 
     ///////////////////////////////////////////////////////////
@@ -21,7 +22,7 @@ $(document).ready(function(){
         socket.emit('readFile', {name: $(a.currentTarget).text()});
         $('#navigation').children().attr('class', 'link');
         $('#content #markdown_content').html('<em>Loading...</em>');
-        $('#content_header h1').html('Node Wiki');
+        $('#content_header h2').html('Node Wiki');
         $(a.currentTarget).attr('class', 'selected link');
         changeContentHeight();
 
@@ -43,7 +44,7 @@ $(document).ready(function(){
         changeContentHeight();
       } else {
         $('#content #markdown_content').html(data.fileContents);
-        $('#content #content_header h1').html(data.fileName);
+        $('#content #content_header h2').html(data.fileName);
         rawMd = data.rawMd;
         fileName = data.fileName;
         editingAllowed = true;
@@ -61,12 +62,13 @@ $(document).ready(function(){
       editingAllowed = false;
       creatingNewFile = false;
       showButtons(false);
+      loadIndex();
     });
 
     $(document).on('click', '#navigation a#go_back', function(){
       socket.emit('goBackFolder');
       $('#content #markdown_content').html('');
-      $('#content_header h1').html('Node Wiki');
+      $('#content_header h2').html('Node Wiki');
       //editingAllowed = true;
     })
 
@@ -105,13 +107,15 @@ $(document).ready(function(){
         editingAllowed = true;
         changeContentHeight();
         $('#notification').html('Saved');
+        $('#edit_save_buttons').html('<a id="edit" href="#" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-edit"></span></a>');
+
         $('#notification').slideDown('fast', function(){
           window.setTimeout(function(){$('#notification').slideUp()}, 2000);
         });
 
         if (creatingNewFile == true){
           creatingNewFile = false;
-          $('#content #content_header h1').html(fileName);
+          $('#content #content_header h2').html(fileName);
           tempFile = '';
           socket.emit('refreshNav');
         }
@@ -124,6 +128,7 @@ $(document).ready(function(){
     $(document).on('click', '#edit_save_buttons a#edit', function(){
       if (editingAllowed == true){
         editingAllowed = false;
+        $('#edit_save_buttons').html('<a id="save" href="#" class="btn btn-sm btn-success" title="Save"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>');
         $('#content').height('auto');
         $('#content #markdown_content').html('<textarea>' + rawMd + '</textarea>');
       }
@@ -148,7 +153,7 @@ $(document).ready(function(){
       tempFile.attr('class', 'link selected');
       $('#navigation a#new_file').attr('id', 'new_file_inactive');
       $('#content #markdown_content').html('<textarea></textarea>');
-      $('#content #content_header h1').html('<form><input type="text" /></form>');
+      $('#content #content_header h2').html('<form><input type="text" placeholder="Filename.md" /></form>');
       $('#content #content_header input').focus();
       showButtons(true, true);
       changeContentHeight();
@@ -164,7 +169,7 @@ $(document).ready(function(){
       creatingNewFile = false;
       editingAllowed = true;
       $('#content #markdown_content').html('');
-      $('#content #content_header h1').html('Node Wiki');
+      $('#content #content_header h2').html('Node Wiki');
       $('#navigation a#new_file_inactive').attr('id', 'new_file');
       showButtons(false);
       changeContentHeight();
@@ -185,14 +190,14 @@ $(document).ready(function(){
         cancelNewFile();
       }
 
-      $('#content #content_header h1').html('Node Wiki');
+      $('#content #content_header h2').html('Node Wiki');
       $('#content #markdown_content').html('Creating new folder, press enter to create the folder');
       $('#navigation').children().attr('class', 'link');
-      $('#navigation #tri_buttons').before('<div id="temp_new_folder"><form><input type="text" /></form></div>');
+      $('#navigation #tri_buttons').before('<div id="temp_new_folder"><form><input type="text" placeholder="Folder name to create" /></form></div>');
       tempFile = $('#navigation #temp_new_folder');
       $('#navigation input').focus();
       $('#navigation a#new_folder').attr('id', 'new_folder_inactive');
-      $('#navigation #tri_buttons').html('<a href="#" id="cancel_folder">Cancel</a><a href="#" id="save_folder">Create Folder</a>');
+      $('#navigation #tri_buttons').html('<ul><li><a href="#" class="btn btn-sm btn-danger" id="cancel_folder">Cancel</a></li><li><a href="#" class="btn btn-sm btn-success" id="save_folder">Create</a></li></ul>');
       changeContentHeight();
     });
 
@@ -215,12 +220,12 @@ $(document).ready(function(){
     $(document).on('click', '#navigation a#save_folder', function(){
       createFolder();
     });
-    
+
 
     $('#navigation').submit(function(){
       createFolder();
     });
-    
+
 
     function cancelNewFolder(){
       if (creatingNewFolder){
@@ -239,22 +244,22 @@ $(document).ready(function(){
         window.setTimeout(function(){$('#notification').slideUp()}, 4000);
       });
     });
-   
+
 
   });
- 
+
 
   ///////////////////////////////////////////////////////////
   // functions for the layout
   ///////////////////////////////////////////////////////////
 
-  function showButtons(show, newFile){
-    var buttons = '<a id="edit" href="#">Edit</a>\n<a id="save" href="#">Save</a>';
+  function showButtons(show, newFile){ /* added button classes for bootstrap */
+    var buttons = '<a id="edit" href="#" class="btn btn-sm btn-success" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>\n<a id="save" href="#" class="btn btn-sm btn-success" title="Save"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>';
     if (show){
       if (newFile){
-        $('#edit_save_buttons').html('<a id="cancel" href="#">Cancel</a>\n<a id="save" href="#">Save</a>');
+        $('#edit_save_buttons').html('<a id="cancel" href="#" class="btn btn-sm btn-danger" title="Cancel">Cancel</a>\n<a id="save" href="#" class="btn btn-sm btn-success" title="Save"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>');
       } else {
-        $('#edit_save_buttons').html(buttons);
+        $('#edit_save_buttons').html('<a id="edit" href="#" class="btn btn-sm btn-success" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>');
       }
     } else {
       $('#edit_save_buttons').html('');
@@ -274,6 +279,13 @@ $(document).ready(function(){
       $('#content').height($('#navigation').height() + 20 + 'px');
     }
   }
-
+  function loadIndex() {
+    // check for a index.md page and click it
+    $('#navigation a.link').each(function() {
+      var $this = $(this);
+      if ($this.text() === 'index.md')
+      $this.click();
+    });
+  }
 
 });
