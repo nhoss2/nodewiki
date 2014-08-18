@@ -45,12 +45,51 @@ body{
   }
 }
 
+#header{
+  margin-left: @side;
+  padding: 10px;
+  background: #f3f3f3;
+  overflow: hidden;
+  display: block;
+
+  #auth-area{
+    float: right;
+    margin-right: 40px;
+
+    #login-dialog{
+      position: absolute;
+      background: #bbb;
+      padding: 20px;
+      right: 40px;
+      top: 5px;
+    }
+  }
+
+  h3.pointer{
+    font-size: 20px;
+    margin: 0;
+    font-weight: normal;
+    font-family: monospace;
+    cursor: pointer;
+
+    &:hover{
+      color: #aaaaaa;
+    }
+  }
+
+  p{
+    margin: 0;
+  }
+
+}
+
 #wiki-content{
   float: left;
   overflow: hidden;
   margin-left: @side;
   padding: 20px 40px 40px 40px;
   max-width: 700px;
+  clear: left;
 
   h1{
     margin: 20px 0;

@@ -5,7 +5,7 @@ TODO
 
   - Allow extra file types other than .md
 
-  - Try serif fonts: Trykker
+  - Try serif fonts: Trykker, Merriweather
 
 
 FEATURES

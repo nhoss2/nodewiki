@@ -1,6 +1,7 @@
 (function(){
   var nav = angular.module('sideNav', []);
-  var wiki = angular.module('nodeWiki', ['ui.router', 'sideNav']);
+  var auth = angular.module('nodeAuth', []);
+  var wiki = angular.module('nodeWiki', ['ui.router', 'sideNav', 'nodeAuth']);
 
   wiki.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider){
     $stateProvider
@@ -109,6 +110,16 @@
     files.listFiles(currentPath, function(files){
       $scope.files = files;
     });
+
+  }]);
+
+  auth.controller('headerCtrl', ['$scope', function($scope){
+
+    $scope.loginMessage = 'Log in';
+    $scope.showLogin = false;
+    $scope.toggleDialog = function(){
+      $scope.showLogin = !$scope.showLogin;
+    };
 
   }]);
 

@@ -5,7 +5,8 @@
   "description": "A simple wiki that uses markdown files",
   "license": "MIT",
   "scripts": {
-    "start": "bin/cli.js"
+    "start": "bin/cli.js",
+    "test": "make test"
   },
   "main": "nodewiki.js",
   "bin": "bin/cli.js",
