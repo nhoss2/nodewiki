@@ -28,8 +28,6 @@ function NodeWiki(opts){
     '.txt'
   ];
 
-  this.marked = require('marked');
-
   this.app = require('./lib/create-express-app.js')();
 
   var Routes = require('./lib/routes');
