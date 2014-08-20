@@ -21,11 +21,12 @@
 
     <div id="header" ng-controller="headerCtrl">
       <div id="auth-area">
-        <h3 class="pointer" ng-click="toggleDialog()">{{ loginMessage }}</h3>
+        <h3 class="pointer" ng-click="showLogin = !showLogin">{{ loginMessage }}</h3>
           <div id="login-dialog" ng-show="showLogin">
-            <h3 class="pointer" ng-click="toggleDialog()">Close</h3>
+            <h3 class="pointer" ng-click="showLogin = !showLogin">Close</h3>
             <input type="text" placeholder="username" ng-model="user.name" />
             <input type="password" placeholder="password" ng-model="user.password" />
+            <div id="login-button">Log in</div>
           </div>
       </div>
     </div><!-- header -->

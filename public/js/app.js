@@ -117,9 +117,6 @@
 
     $scope.loginMessage = 'Log in';
     $scope.showLogin = false;
-    $scope.toggleDialog = function(){
-      $scope.showLogin = !$scope.showLogin;
-    };
 
   }]);
 

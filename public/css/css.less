@@ -59,9 +59,29 @@ body{
     #login-dialog{
       position: absolute;
       background: #bbb;
-      padding: 20px;
+      padding: 10px 20px 20px 20px;
       right: 40px;
       top: 5px;
+
+      input{
+        display: block;
+        width: 200px;
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      #login-button{
+        display: block;
+        margin-top: 15px;
+        background: #444444;
+        color: white;
+        text-align: center;
+        padding: 4px;
+      }
+
+      h3.pointer{
+        margin-bottom: 10px;
+      }
     }
   }
 
@@ -71,10 +91,7 @@ body{
     font-weight: normal;
     font-family: monospace;
     cursor: pointer;
-
-    &:hover{
-      color: #aaaaaa;
-    }
+    text-align: right;
   }
 
   p{
