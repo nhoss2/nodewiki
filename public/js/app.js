@@ -115,8 +115,8 @@
 
   auth.controller('headerCtrl', ['$scope', function($scope){
 
-    $scope.loginMessage = 'Log in';
-    $scope.showLogin = false;
+    $scope.showDialog = false;
+    $scope.showRegister = false;
 
   }]);
 
