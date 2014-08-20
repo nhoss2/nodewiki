@@ -28,7 +28,7 @@ function NodeWiki(opts){
     '.txt'
   ];
 
-  this.app = require('./lib/create-express-app.js')();
+  this.app = require('./lib/create_express_app.js')();
 
   var Routes = require('./lib/routes');
   var routes = new Routes(this);
