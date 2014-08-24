@@ -12,14 +12,8 @@
   "bin": "bin/cli.js",
   "dependencies": {
     "async": "^0.8.0",
-    "body-parser": "^1.6.5",
-    "express": "^4.8.5",
     "good": "^2.2.3",
-    "hapi": "^6.6.0",
-    "hjs": "0.0.6",
-    "less-middleware": "^1.0.3",
-    "parseurl": "^1.3.0",
-    "serve-static": "^1.5.3"
+    "hapi": "^6.6.0"
   },
   "repository": {
     "type": "git",
