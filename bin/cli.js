@@ -30,10 +30,10 @@ server.pack.register([
   }
 ], function(err){
   if (err){
-    throw new Error('Problem with registering plugins ' + err);
+    throw new Error('Problem with registering plugins: ' + err);
   }
 });
 
 server.start(function(){
-  console.log('Nodewiki started at', server.info.uri);
+  console.log('Nodewiki started at:', server.info.uri);
 });
