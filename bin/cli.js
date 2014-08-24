@@ -1,14 +1,39 @@
 #!/usr/bin/env node
 
-var http = require('http');
+var Hapi = require('hapi');
 var NodeWiki = require('../nodewiki');
 
 var wiki = new NodeWiki();
 
-wiki.app.set('port', process.argv[2] || process.env.PORT || 3000);
+var server = new Hapi.Server(process.env.PORT || 3000, {
+  labels: ['api', 'static']
+});
 
-var server = http.createServer(wiki.app);
+server.pack.register([
+  {
+    plugin: require('good'),
+    options: {
+      subscribers: {
+        console: ['request', 'log', 'error'],
+      }
+    }
+  },
+  {
+    plugin: require('../lib/api_plugin'),
+    options: {
+      wiki: wiki
+    }
+  },
 
-server.listen(wiki.app.get('port'), function(){
-  console.log('Node Wiki started at http://localhost:' + wiki.app.get('port'));
+  {
+    plugin: require('../lib/static_plugin'),
+  }
+], function(err){
+  if (err){
+    throw new Error('Problem with registering plugins ' + err);
+  }
+});
+
+server.start(function(){
+  console.log('Nodewiki started at', server.info.uri);
 });
