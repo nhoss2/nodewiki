@@ -20,6 +20,8 @@
     "url": "git://github.com/nhoss2/nodewiki.git"
   },
   "devDependencies": {
+    "gulp": "^3.8.7",
+    "gulp-less": "^1.3.5",
     "mocha": "^1.21.4",
     "supertest": "^0.13.0"
   }
