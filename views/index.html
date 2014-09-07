@@ -11,16 +11,10 @@
     <body ng-app="nodeWiki">
     <noscript>Sorry you need javascript for this application to work</noscript>
 
-    <div id="sidebar" >
-      <h1>NODE WIKI</h1>
-
-      <div id="pages-list" ui-view="sidebar">
-      </div>
-
-    </div><!-- sidebar -->
-
-    <div id="header" ng-controller="headerCtrl">
-      <div id="auth-area">
+    <div id="header" >
+      <div id="path-bar" ui-view="pathbar">
+      </div><!-- path-bar -->
+      <div id="auth-area" ng-controller="headerAuthCtrl">
         <h3 class="pointer" ng-click="showDialog = !showDialog">Log in or Register</h3>
           <div id="login-dialog" ng-show="showDialog">
             <h3 class="pointer" ng-click="showDialog= !showDialog">Close</h3>
@@ -44,6 +38,14 @@
           </div>
       </div>
     </div><!-- header -->
+
+    <div id="sidebar" >
+
+      <div id="pages-list" ui-view="sidebar">
+      </div>
+
+    </div><!-- sidebar -->
+
 
     <div id="wiki-content" ui-view="wiki">
 

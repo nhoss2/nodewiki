@@ -4,25 +4,15 @@ body{
 }
 
 @side: 300px;
+@top: 40px;
 
 #sidebar{
   position: fixed;
-  background: #494949;
+  background: #1c1c1c;
   border-right: 1px solid #494949;
-  top: 0;
+  top: @top;
   bottom: 0;
   width: @side;
-
-  h1{
-    font-family: Raleway, san-serif;
-    font-size: 26px;
-    font-weight: bold;
-    margin: 0;
-    padding: 20px;
-    background: #cfcfcf;
-    border-bottom: 1px solid #222;
-    color: #4e6a77;
-  }
 
   #pages-list{
 
@@ -46,11 +36,15 @@ body{
 }
 
 #header{
-  margin-left: @side;
+  position: fixed;
   padding: 10px;
-  background: #f3f3f3;
-  overflow: hidden;
+  background: #6abc6e;
   display: block;
+  overflow: visible;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 20px; //total height 40px
 
   #auth-area{
     float: right;
@@ -115,6 +109,7 @@ body{
   float: left;
   overflow: hidden;
   margin-left: @side;
+  margin-top: @top;
   padding: 20px 40px 40px 40px;
   max-width: 700px;
   clear: left;
@@ -156,10 +151,5 @@ body{
     font-style: normal;
 }
 
-@import url(http://fonts.googleapis.com/css?family=Raleway:700);
 @import url(http://fonts.googleapis.com/css?family=Roboto+Slab);
 @import url(http://fonts.googleapis.com/css?family=PT+Sans);
-
-
-
-

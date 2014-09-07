@@ -48,7 +48,11 @@
              * The current directory is determined by the what the URL path is.
              */
             controller: 'navCtrl',
-            template: '<a class="path" href="#/w{{ path.link }}" ng-repeat="path in paths">{{ path.name }}</a><a class="entity" href="#/w{{ currentPath }}{{item.name}}" ng-repeat="item in files | orderBy: \'name\'">{{ item.name }}</a>'
+            template: '<a class="entity" href="#/w{{ currentPath }}{{item.name}}" ng-repeat="item in files | orderBy: \'name\'">{{ item.name }}</a>'
+          },
+          pathbar:{
+            controller: 'pathBarCtrl',
+            template: '<a class="path" href="#/w{{ path.link }}" ng-repeat="path in paths">{{ path.name }}</a>'
           }
         }
       });
@@ -62,8 +66,8 @@
   nav.factory('url', ['$location', function($location){
     /*
      * This factory should provide:
-     *   - The current file (or null if current path is a directory)
      *   - The path to the directory
+     *   - The current file (or null if current path is a directory)
      *   - An array of the directories traversed
      */
 
@@ -90,13 +94,10 @@
     }
   }]);
 
-  nav.controller('navCtrl', ['$scope', 'files', 'url', function($scope, files, url){
-
-    var currentPath = url.getPath();
-    $scope.currentPath = currentPath;
+  nav.controller('pathBarCtrl', ['$scope', 'url', function($scope, url){
 
     var dirList = url.listDirectories();
-    var paths = [{name: '/', link: '/'}];
+    var paths = [{name: '/', link: '/'}]; // root dir
 
     dirList.forEach(function(dir, i){
       paths.push({
@@ -106,6 +107,12 @@
     });
 
     $scope.paths = paths;
+  }]);
+
+  nav.controller('navCtrl', ['$scope', 'files', 'url', function($scope, files, url){
+
+    var currentPath = url.getPath();
+    $scope.currentPath = currentPath;
 
     files.listFiles(currentPath, function(files){
       $scope.files = files;
@@ -113,7 +120,7 @@
 
   }]);
 
-  auth.controller('headerCtrl', ['$scope', function($scope){
+  auth.controller('headerAuthCtrl', ['$scope', function($scope){
 
     $scope.showDialog = false;
     $scope.showRegister = false;
