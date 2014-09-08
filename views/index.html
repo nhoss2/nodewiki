@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>Node Wiki</title>
-    <link rel='stylesheet' href='/css/css.css' />
+    <link rel="stylesheet" href="/css/css.css" />
+    <link rel="stylesheet" href="/css/fonts/fontello/css/fontello.css" />
     <script type="text/javascript" src="js/lib/angular.min.js"></script>
     <script type="text/javascript" src="js/lib/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="js/lib/marked.min.js"></script>
@@ -15,7 +16,9 @@
       <div id="path-bar" ui-view="pathbar">
       </div><!-- path-bar -->
       <div id="auth-area" ng-controller="headerAuthCtrl">
-        <h3 class="pointer" ng-click="showDialog = !showDialog">Log in or Register</h3>
+        <span class="header-title">
+          <h3 class="pointer" ng-click="showDialog = !showDialog">Log in or Register</h3>
+        </span>
           <div id="login-dialog" ng-show="showDialog">
             <h3 class="pointer" ng-click="showDialog= !showDialog">Close</h3>
             <div id="login-section" ng-show="!showRegister">

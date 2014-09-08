@@ -7,4 +7,7 @@ gulp.task('less', function(){
     .pipe(gulp.dest('./public/css/'));
 });
 
+gulp.task('default', ['less']);
+
 gulp.watch('./public/css/css.less', ['less']);
+

@@ -28,23 +28,52 @@ body{
       text-decoration: none;
     }
 
-    a.path {
-      padding: 5px;
-      color: white;
-    }
   }
 }
 
 #header{
   position: fixed;
-  padding: 10px;
   background: #6abc6e;
   display: block;
   overflow: visible;
   top: 0;
   right: 0;
   left: 0;
-  height: 20px; //total height 40px
+  height: @top;
+
+  #path-bar{
+    display: inline;
+
+    ol{
+      white-space: nowrap;
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      font-family: "Share Tech Mono";
+    }
+
+    li {
+      display: inline-block;
+      line-height: @top;
+      position: relative;
+
+        a.path{
+          color: #314e32;
+          text-decoration: none;
+        }
+
+        i.icon-home{
+          margin-left: 10px;
+        }
+
+        i.icon-right-open-big{
+          color: #579c5b;
+          margin: 0 5px;
+        }
+
+    }
+
+  }
 
   #auth-area{
     float: right;
@@ -74,10 +103,6 @@ body{
         cursor: pointer;
       }
 
-      h3.pointer{
-        margin-bottom: 10px;
-      }
-
       p.pointer{
         margin-top: 10px;
         cursor: pointer;
@@ -89,14 +114,24 @@ body{
     }
   }
 
-  h3.pointer{
-    font-size: 20px;
-    margin: 0;
-    font-weight: normal;
-    font-family: monospace;
-    cursor: pointer;
-    text-align: right;
+  span.header-title{
+    background: #1c2a30;
+    overflow: hidden;
+    display: inline-block;
+    padding: @top/8 @top/4;
+    margin: @top/6 0;
     float: right;
+    border-radius: 4px;
+
+    h3.pointer{
+      color: #a5d8bc;
+      font-size: 12px;
+      font-family: 'Maven Pro';
+      margin: 0;
+      font-weight: 500;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
   }
 
   p{
@@ -153,3 +188,5 @@ body{
 
 @import url(http://fonts.googleapis.com/css?family=Roboto+Slab);
 @import url(http://fonts.googleapis.com/css?family=PT+Sans);
+@import url(http://fonts.googleapis.com/css?family=Share+Tech+Mono);
+@import url(http://fonts.googleapis.com/css?family=Doppio+One|Maven+Pro:500);

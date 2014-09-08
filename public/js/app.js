@@ -52,7 +52,7 @@
           },
           pathbar:{
             controller: 'pathBarCtrl',
-            template: '<a class="path" href="#/w{{ path.link }}" ng-repeat="path in paths">{{ path.name }}</a>'
+            template: '<ol><li><a class="path" href="#/w/"><i class="icon-home"></i></a><i class="icon-right-open-big"></i></li><li ng-repeat="path in paths"><a class="path" href="#/w{{ path.link }}">{{ path.name }}</a><i class="icon-right-open-big"></i></li></ol>'
           }
         }
       });
@@ -97,11 +97,11 @@
   nav.controller('pathBarCtrl', ['$scope', 'url', function($scope, url){
 
     var dirList = url.listDirectories();
-    var paths = [{name: '/', link: '/'}]; // root dir
+    var paths = []; // root dir
 
     dirList.forEach(function(dir, i){
       paths.push({
-        name: dir + '/',
+        name: dir,
         link: '/' + dirList.slice(0, i+1).join('/') + '/'
       });
     });
