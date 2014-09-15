@@ -97,7 +97,7 @@
   nav.controller('pathBarCtrl', ['$scope', 'url', function($scope, url){
 
     var dirList = url.listDirectories();
-    var paths = []; // root dir
+    var paths = [];
 
     dirList.forEach(function(dir, i){
       paths.push({
