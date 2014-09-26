@@ -11,7 +11,7 @@
   "main": "nodewiki.js",
   "bin": "bin/cli.js",
   "dependencies": {
-    "async": "^0.8.0",
+    "async": "^0.9.0",
     "good": "^2.2.3",
     "hapi": "^6.6.0"
   },
