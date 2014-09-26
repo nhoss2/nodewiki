@@ -1,0 +1,15 @@
+<ol>
+  <li>
+    <a class="path" href="#/w/">
+      <i class="icon-home"></i>
+    </a>
+    <i class="icon-right-open-big"></i>
+  </li>
+  
+  <li ng-repeat="path in paths">
+    <a class="path" href="#/w{{ path.link }}">
+      {{ path.name }}
+    </a>
+    <i class="icon-right-open-big"></i>
+  </li>
+</ol>

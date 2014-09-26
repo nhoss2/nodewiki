@@ -48,12 +48,34 @@
              * The current directory is determined by the what the URL path is.
              */
             controller: 'navCtrl',
-            template: '<a class="entity" href="#/w{{ currentPath }}{{item.name}}" ng-repeat="item in files | orderBy: \'name\'">{{ item.name }}</a>'
+            templateUrl: 'templates/file_sidebar.html'
           },
-          pathbar:{
+
+          pathbar: {
             controller: 'pathBarCtrl',
-            template: '<ol><li><a class="path" href="#/w/"><i class="icon-home"></i></a><i class="icon-right-open-big"></i></li><li ng-repeat="path in paths"><a class="path" href="#/w{{ path.link }}">{{ path.name }}</a><i class="icon-right-open-big"></i></li></ol>'
+            templateUrl: 'templates/nav_bar.html'
+          },
+
+          wikioptions: {
+            templateUrl: 'templates/options_sidebar.html'
+          },
+
+        }
+      })
+      .state('editWikiPage', {
+        url: '/edit/*page',
+        views: {
+          wiki: {
+            template: 'text editor here'
+          },
+          pathbar: {
+            controller: 'pathBarCtrl',
+            templateUrl: 'templates/nav_bar.html'
+          },
+          wikioptions: {
+            template: 'u'
           }
+
         }
       });
       $urlRouterProvider.otherwise('/');

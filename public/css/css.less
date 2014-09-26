@@ -3,7 +3,8 @@ body{
   margin: 0;
 }
 
-@side: 300px;
+@navbar-width: 300px;
+@wiki-options-width: 240px;
 @top: 40px;
 
 #sidebar{
@@ -12,7 +13,7 @@ body{
   border-right: 1px solid #494949;
   top: @top;
   bottom: 0;
-  width: @side;
+  width: @navbar-width;
 
   #pages-list{
 
@@ -140,11 +141,14 @@ body{
 
 }
 
+@wiki-options-padding: 20px;
+
 #wiki-content{
   float: left;
   overflow: hidden;
-  margin-left: @side;
+  margin-left: @navbar-width;
   margin-top: @top;
+  margin-right: @wiki-options-width + @wiki-options-padding * 2;
   padding: 20px 40px 40px 40px;
   max-width: 700px;
   clear: left;
@@ -162,6 +166,23 @@ body{
     line-height: 20px;
     color: #242424;
   }
+}
+
+#wiki-options{
+  overflow: hidden;
+  width: @wiki-options-width;
+  padding: @wiki-options-padding;
+  position: fixed;
+  top: @top;
+  bottom: 0;
+  right: 0;
+  background: #eee;
+
+  #edit-page-button{
+    cursor: pointer;
+    background: #aaa;
+  }
+
 }
 
 @font-face{
