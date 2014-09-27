@@ -4,8 +4,11 @@
     <title>Node Wiki</title>
     <link rel="stylesheet" href="/css/css.css" />
     <link rel="stylesheet" href="/css/fonts/fontello/css/fontello.css" />
+    <link rel="stylesheet" href="/css/codemirror.css" />
+    <script type="text/javascript" src="js/lib/codemirror-compressed.js"></script>
     <script type="text/javascript" src="js/lib/angular.min.js"></script>
     <script type="text/javascript" src="js/lib/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="js/lib/ui-codemirror.min.js"></script>
     <script type="text/javascript" src="js/lib/marked.min.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
   </head>
@@ -51,10 +54,10 @@
 
 
     <div id="wiki-content" ui-view="wiki">
-
     </div><!-- wiki-content -->
 
-    <div id="wiki-options" ui-view="wikioptions">
+
+    <div id="wiki-options" ui-view="wikioptions" ng-show="showOptionsBar">
 
     </div><!-- wiki-options-->
 

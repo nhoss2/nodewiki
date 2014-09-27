@@ -1,7 +1,7 @@
 (function(){
   var nav = angular.module('sideNav', []);
   var auth = angular.module('nodeAuth', []);
-  var wiki = angular.module('nodeWiki', ['ui.router', 'sideNav', 'nodeAuth']);
+  var wiki = angular.module('nodeWiki', ['ui.router', 'ui.codemirror', 'sideNav', 'nodeAuth']);
 
   wiki.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider){
     $stateProvider
@@ -57,7 +57,8 @@
           },
 
           wikioptions: {
-            templateUrl: 'templates/options_sidebar.html'
+            templateUrl: 'templates/options_sidebar.html',
+            controller: 'optionsBarCtrl'
           },
 
         }
@@ -72,10 +73,10 @@
             controller: 'pathBarCtrl',
             templateUrl: 'templates/nav_bar.html'
           },
-          wikioptions: {
-            template: 'u'
-          }
-
+          sidebar: {
+            controller: 'navCtrl',
+            templateUrl: 'templates/file_sidebar.html'
+          },
         }
       });
       $urlRouterProvider.otherwise('/');
@@ -83,6 +84,50 @@
 
   wiki.config(['$locationProvider', function($locationProvider){
     //$locationProvider.html5Mode(true);
+  }]);
+
+  wiki.controller('optionsBarCtrl', ['$scope', 'url', function($scope, url){
+    $scope.showOptionsBar = true;
+
+    $scope.fileName = url.getFile();
+
+    $scope.editUrl = '#/edit' + url.getPath() + url.getFile();
+  }]);
+
+
+  nav.controller('pathBarCtrl', ['$scope', 'url', function($scope, url){
+
+    var dirList = url.listDirectories();
+
+    var paths = [];
+
+    dirList.forEach(function(dir, i){
+      paths.push({
+        name: dir,
+        link: '/' + dirList.slice(0, i+1).join('/') + '/'
+      });
+    });
+
+    $scope.paths = paths;
+  }]);
+
+  nav.controller('navCtrl', ['$scope', 'files', 'url', function($scope, files, url){
+
+    var currentPath = url.getPath();
+
+    $scope.currentPath = currentPath;
+
+    files.listFiles(currentPath, function(files){
+      $scope.files = files;
+    });
+
+  }]);
+
+  auth.controller('headerAuthCtrl', ['$scope', function($scope){
+
+    $scope.showDialog = false;
+    $scope.showRegister = false;
+
   }]);
 
   nav.factory('url', ['$location', function($location){
@@ -96,7 +141,7 @@
     return {
       getPath: function(){
         var path = $location.path();
-        return path.substring(2, path.lastIndexOf('/') + 1);
+        return path.substring(path.substr(1).indexOf('/') + 1, path.lastIndexOf('/') + 1);
       },
 
       getFile: function(){
@@ -114,39 +159,6 @@
       }
 
     }
-  }]);
-
-  nav.controller('pathBarCtrl', ['$scope', 'url', function($scope, url){
-
-    var dirList = url.listDirectories();
-    var paths = [];
-
-    dirList.forEach(function(dir, i){
-      paths.push({
-        name: dir,
-        link: '/' + dirList.slice(0, i+1).join('/') + '/'
-      });
-    });
-
-    $scope.paths = paths;
-  }]);
-
-  nav.controller('navCtrl', ['$scope', 'files', 'url', function($scope, files, url){
-
-    var currentPath = url.getPath();
-    $scope.currentPath = currentPath;
-
-    files.listFiles(currentPath, function(files){
-      $scope.files = files;
-    });
-
-  }]);
-
-  auth.controller('headerAuthCtrl', ['$scope', function($scope){
-
-    $scope.showDialog = false;
-    $scope.showRegister = false;
-
   }]);
 
   nav.factory('files', ['$http', '$q', function($http, $q){
@@ -187,7 +199,7 @@
 
     return {
       /*
-       * param: function(error, rawFile)
+       * cb params: function(error, rawFile)
        */
       getRaw: function(cb){
 
