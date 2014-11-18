@@ -47,7 +47,7 @@
              * This view is used to show the items in the current directory.
              * The current directory is determined by the what the URL path is.
              */
-            controller: 'navCtrl',
+            controller: 'fileSidebarCtrl',
             templateUrl: 'templates/file_sidebar.html'
           },
 
@@ -67,14 +67,15 @@
         url: '/edit/*page',
         views: {
           wiki: {
-            template: 'text editor here'
+            controller: 'editorCtrl',
+            templateUrl: 'templates/wiki_edit.html'
           },
           pathbar: {
             controller: 'pathBarCtrl',
             templateUrl: 'templates/nav_bar.html'
           },
           sidebar: {
-            controller: 'navCtrl',
+            controller: 'fileSidebarCtrl',
             templateUrl: 'templates/file_sidebar.html'
           },
         }
@@ -94,6 +95,22 @@
     $scope.editUrl = '#/edit' + url.getPath() + url.getFile();
   }]);
 
+  wiki.controller('editorCtrl', ['$scope', 'currentPage', function($scope, currentPage){
+    currentPage.getRaw(function(err, raw){
+      if (err === null){
+        $scope.pageRaw = raw;
+      } else {
+        // TODO: notify there was an error
+        $scope.pageRaw = '';
+      }
+    });
+
+    $scope.editorOptions = {
+      lineWrapping: true,
+      autofocus: true
+    };
+
+  }]);
 
   nav.controller('pathBarCtrl', ['$scope', 'url', function($scope, url){
 
@@ -111,7 +128,8 @@
     $scope.paths = paths;
   }]);
 
-  nav.controller('navCtrl', ['$scope', 'files', 'url', function($scope, files, url){
+  nav.controller('fileSidebarCtrl', ['$scope', 'files', 'url', function($scope, files, url){
+    $scope.showSidebar = true;
 
     var currentPath = url.getPath();
 

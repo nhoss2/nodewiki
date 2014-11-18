@@ -22,33 +22,30 @@
         <span class="header-title">
           <h3 class="pointer" ng-click="showDialog = !showDialog">Log in or Register</h3>
         </span>
-          <div id="login-dialog" ng-show="showDialog">
-            <h3 class="pointer" ng-click="showDialog= !showDialog">Close</h3>
-            <div id="login-section" ng-show="!showRegister">
-              <p>Log in:</p>
-              <input type="text" placeholder="username" ng-model="user.name" />
-              <input type="password" placeholder="password" ng-model="user.password" />
-              <div class="login-register-button">Log in</div>
+        <div id="login-dialog" ng-show="showDialog">
+          <h3 class="pointer" ng-click="showDialog= !showDialog">Close</h3>
+          <div id="login-section" ng-show="!showRegister">
+            <p>Log in:</p>
+            <input type="text" placeholder="username" ng-model="user.name" />
+            <input type="password" placeholder="password" ng-model="user.password" />
+            <div class="login-register-button">Log in</div>
 
-              <p class="pointer" ng-click="showRegister = true">Register</p>
-            </div>
-            <div id="register-section" ng-show="showRegister">
-              <p>Create new account:</p>
-              <input type="text" placeholder="username" ng-model="user.name" />
-              <input type="text" placeholder="email" ng-model="user.email" />
-              <input type="password" placeholder="password" ng-model="user.password" />
-              <input type="password" placeholder="password again" ng-model="user.passconf" />
-              <div class="login-register-button">Register</div>
-              <p class="pointer" ng-click="showRegister = false">Go back</p>
-            </div>
+            <p class="pointer" ng-click="showRegister = true">Register</p>
           </div>
+          <div id="register-section" ng-show="showRegister">
+            <p>Create new account:</p>
+            <input type="text" placeholder="username" ng-model="user.name" />
+            <input type="text" placeholder="email" ng-model="user.email" />
+            <input type="password" placeholder="password" ng-model="user.password" />
+            <input type="password" placeholder="password again" ng-model="user.passconf" />
+            <div class="login-register-button">Register</div>
+            <p class="pointer" ng-click="showRegister = false">Go back</p>
+          </div>
+        </div>
       </div>
     </div><!-- header -->
 
-    <div id="sidebar" >
-
-      <div id="pages-list" ui-view="sidebar">
-      </div>
+    <div id="sidebar" ui-view="sidebar" ng-show="showSidebar">
 
     </div><!-- sidebar -->
 

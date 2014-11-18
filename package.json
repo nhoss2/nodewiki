@@ -13,15 +13,15 @@
   "dependencies": {
     "async": "^0.9.0",
     "good": "^2.2.3",
-    "hapi": "^6.6.0"
+    "hapi": "^7.5.2"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/nhoss2/nodewiki.git"
   },
   "devDependencies": {
-    "gulp": "^3.8.7",
-    "gulp-less": "^1.3.5",
-    "mocha": "^1.21.4"
+    "gulp": "^3.8.10",
+    "gulp-less": "^1.3.6",
+    "mocha": "^2.0.1"
   }
 }
