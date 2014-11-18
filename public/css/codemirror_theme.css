@@ -1,0 +1,34 @@
+/* Color scheme */
+
+.cm-s-nw .CodeMirror {
+  background-color:#ffffff;
+  color:#2e383c;
+  line-height:1.4375;
+}
+.cm-s-nw .cm-comment {color:#75787b}
+.cm-s-nw .cm-keyword, .cm-s-nw .cm-property {color:#1d75b3}
+.cm-s-nw .cm-atom,.cm-s-nw .cm-number {color:#75438a}
+.cm-s-nw .cm-node,.cm-s-nw .cm-tag {color:#9c3328}
+.cm-s-nw .cm-string {color:#b35e14}
+.cm-s-nw .cm-variable,.cm-s-nw .cm-qualifier {color:#047d65}
+
+
+/* Editor styling */
+
+.cm-s-nw pre {
+  padding:0;
+}
+
+.cm-s-nw .CodeMirror-gutters {
+  border:none;
+  border-right:10px solid transparent;
+  background-color:transparent;
+}
+
+.cm-s-nw .CodeMirror-linenumber {
+  padding:0;
+  color:#e0e2e5;
+}
+
+.cm-s-nw .CodeMirror-guttermarker { color: #1d75b3; }
+.cm-s-nw .CodeMirror-guttermarker-subtle { color: #e0e2e5; }

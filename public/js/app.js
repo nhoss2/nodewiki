@@ -31,12 +31,12 @@
 
               currentPage.getRaw(function(err, raw){
                 if (err === null){
-                  deferred.resolve(marked(raw));
+                  deferred.resolve('<div id="wiki-content">' + 
+                  marked(raw) + '</div>');
                 } else {
                   deferred.resolve('Error, ' + err);
                 }
               });
-
 
               return deferred.promise;
 
@@ -57,8 +57,8 @@
           },
 
           wikioptions: {
-            templateUrl: 'templates/options_sidebar.html',
-            controller: 'optionsBarCtrl'
+            controller: 'optionsBarCtrl',
+            templateUrl: 'templates/options_sidebar.html'
           },
 
         }
@@ -74,9 +74,9 @@
             controller: 'pathBarCtrl',
             templateUrl: 'templates/nav_bar.html'
           },
-          sidebar: {
-            controller: 'fileSidebarCtrl',
-            templateUrl: 'templates/file_sidebar.html'
+          wikioptions: {
+            controller: 'editingBarCtrl',
+            templateUrl: 'templates/editing_sidebar.html'
           },
         }
       });
@@ -107,10 +107,20 @@
 
     $scope.editorOptions = {
       lineWrapping: true,
-      autofocus: true
+      autofocus: true,
+      theme: 'nw',
+      viewportMargin: 1000, // prevent changing of width of editor
+      tabSize: Infinity,
     };
 
   }]);
+
+  wiki.controller('editingBarCtrl', ['$scope', 'url', function($scope, url){
+    $scope.showOptionsBar = true;
+
+    $scope.fileName = url.getFile();
+  }]);
+
 
   nav.controller('pathBarCtrl', ['$scope', 'url', function($scope, url){
 

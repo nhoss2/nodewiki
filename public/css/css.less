@@ -41,6 +41,7 @@ body{
   right: 0;
   left: 0;
   height: @top;
+  z-index: 10;
 
   #path-bar{
     display: inline;
@@ -167,8 +168,21 @@ body{
     color: #242424;
   }
 
+}
+
+#wiki-editor{
+  overflow: hidden;
+  margin-top: @top;
+  padding: 20px;
+  max-width: 900px;
+  margin-right: @wiki-options-width + @wiki-options-padding * 2;
+
   .CodeMirror{
-    border: 1px solid #000;
+    font-family: 'Cousine';
+    font-size: 14px;
+    line-height: 20px;
+    max-width: 900px;
+    height: auto;
   }
 }
 
@@ -215,3 +229,5 @@ body{
 @import url(http://fonts.googleapis.com/css?family=PT+Sans);
 @import url(http://fonts.googleapis.com/css?family=Share+Tech+Mono);
 @import url(http://fonts.googleapis.com/css?family=Doppio+One|Maven+Pro:500);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
+@import url(http://fonts.googleapis.com/css?family=Fira+Mono|Cousine);
