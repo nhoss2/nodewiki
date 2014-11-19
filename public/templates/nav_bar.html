@@ -12,4 +12,10 @@
     </a>
     <i class="icon-right-open-big"></i>
   </li>
+
+  <li ng-show="currentFile">
+    <a class="path" href="#/w{{ path }}{{ currentFile }}">
+      {{ currentFile }}
+    </a>
+  </li>
 </ol>

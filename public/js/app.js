@@ -135,6 +135,9 @@
       });
     });
 
+    $scope.currentFile = url.getFile();
+    $scope.path = url.getPath();
+
     $scope.paths = paths;
   }]);
 
