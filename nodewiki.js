@@ -112,12 +112,13 @@ for (var argn = parser.optind();
     console.log("WARNING: Unknown argument: %s", arg);
   }
 }
-  
+
 // end of command line processing
 
 var app = connect();
 app.use(connect.logger('dev'));
 app.use(connect.static(__dirname + '/static'));
+app.use(connect.static(process.cwd() + '/'));
 
 app.use('/', function(req, res){
   res.end(fs.readFileSync(__dirname + '/static/index.html', 'utf-8'));
