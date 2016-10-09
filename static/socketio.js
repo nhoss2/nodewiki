@@ -77,8 +77,10 @@ $(document).ready(function(){
     $(document).on('click', '#edit_save_buttons a#save', function(){
       if (editingAllowed == false){ //if user is currently editing
         if (creatingNewFile == true){
-          if ($('#content #content_header input').val() != '' && $('#content #markdown_content textarea').val() != ''){
-            socket.emit('saveFile', {name: $('#content #content_header input').val(), content: $('#content #markdown_content textarea').val()});
+          if ($('#content #content_header input[name="name"]').val() != '' && $('#content #markdown_content textarea').val() != ''){
+            socket.emit('saveFile', {name: $('#content #content_header input[name="name"]').val(),
+                                     alias: $('#content #content_header input[name="alias"]').val(),
+                                     content: $('#content #markdown_content textarea').val()});
           } else {
             $('#notification').html('The title or the content cannot be empty. Also, the title needs to end with ".md"');
             $('#notification').slideDown('fast', function(){
@@ -86,7 +88,9 @@ $(document).ready(function(){
             });
           }
         } else {
-          socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
+          socket.emit('saveFile', {name: fileName,
+                                   alias: $('#content #content_header input[name="alias"]').val(),
+                                   content: $('#content #markdown_content textarea').val()});
         }
       }
     });
@@ -109,9 +113,9 @@ $(document).ready(function(){
           window.setTimeout(function(){$('#notification').slideUp()}, 2000);
         });
 
+        $('#content #content_header h1').html(fileName);
         if (creatingNewFile == true){
           creatingNewFile = false;
-          $('#content #content_header h1').html(fileName);
           tempFile = '';
           socket.emit('refreshNav');
         }
@@ -125,6 +129,14 @@ $(document).ready(function(){
       if (editingAllowed == true){
         editingAllowed = false;
         $('#content').height('auto');
+        var fileName = $('#content #content_header h1').html();
+        $('#content #content_header h1').html(
+          fileName
+          +'<form>'
+          //+'<label for="alias">alias</label></br>'
+          +'<input type="text" name="alias" id="alias">'
+          +'</form>'
+        );
         $('#content #markdown_content').html('<textarea>' + rawMd + '</textarea>');
       }
     });
@@ -138,6 +150,7 @@ $(document).ready(function(){
 
     $(document).on('click', '#navigation a#new_file', function(){
       fileName = '';
+      fileAlias = '';
       rawMd = '';
       creatingNewFile = true;
       editingAllowed = false;
@@ -148,8 +161,15 @@ $(document).ready(function(){
       tempFile.attr('class', 'link selected');
       $('#navigation a#new_file').attr('id', 'new_file_inactive');
       $('#content #markdown_content').html('<textarea></textarea>');
-      $('#content #content_header h1').html('<form><input type="text" /></form>');
-      $('#content #content_header input').focus();
+      $('#content #content_header h1').html(
+        '<form><table>'
+        +'<tr><td><label for="name">name*</label></td>'
+        +'<td><input type="text" name="name" id="name"/></td></tr>'
+        +'<tr><td><label for="alias">alias</label></td>'
+        +'<td><input type="text" name="alias" id="alias"></td></tr>'
+        +'</table></form>'
+      );
+      $('#content #content_header input[name="name"]').focus();
       showButtons(true, true);
       changeContentHeight();
     });
