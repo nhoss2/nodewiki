@@ -30,13 +30,13 @@ code {
   box-shadow: 0px 0px 8px 0px #494949;
 }
 #content pre {
-  background: #ddd;
-  border: 1px solid #bbb;
+  background: #dddddd;
+  border: 1px solid #bbbbbb;
   padding: 12px;
   overflow: auto;
 }
 #content code {
-  background: #ddd;
+  background: #dddddd;
   padding: 1px 3px;
 }
 #content #content_header {
@@ -53,8 +53,8 @@ code {
   border-bottom: 1px solid #cbcbcb;
   padding: 20px;
   color: #484848;
-  text-shadow: 0px 1px 0px #ffffff;
-  filter: dropshadow(color=#ffffff, offx=0, offy=1);
+  text-shadow: 0px 1px 0px white;
+  filter: dropshadow(color=white, offx=0, offy=1);
   overflow: hidden;
 }
 #content #content_header h1 {
@@ -115,9 +115,12 @@ code {
 #content #markdown_content a {
   color: #1563f1;
 }
+#content #markdown_content a.link-missing {
+  color: #f18315;
+}
 #content #markdown_content h1,
 #content #markdown_content h2 {
-  border-bottom: 1px solid #bbb;
+  border-bottom: 1px solid #bbbbbb;
   margin-bottom: 3px;
 }
 #content #markdown_content h1 {
@@ -160,12 +163,12 @@ code {
   float: left;
   -webkit-box-radius: 7px 0 0 7px;
   border-radius: 7px 0 0 7px;
-  -webkit-box-shadow: 0px 0px 0px 1px #000000;
-  box-shadow: 0px 0px 0px 1px #000000;
+  -webkit-box-shadow: 0px 0px 0px 1px black;
+  box-shadow: 0px 0px 0px 1px black;
   overflow: hidden;
 }
 #navigation a.link {
-  color: #fff;
+  color: white;
   text-decoration: none;
   padding: 10px 10px 10px 15px;
   display: block;
@@ -215,7 +218,7 @@ code {
   display: block;
 }
 #navigation code {
-  color: #fff;
+  color: white;
 }
 #navigation #tri_buttons {
   background: #242425;
@@ -223,7 +226,7 @@ code {
 #navigation #tri_buttons a {
   font-size: 12px;
   background: #121213;
-  border-right: 1px solid #000;
+  border-right: 1px solid black;
   color: #e5e5e5;
   text-decoration: none;
   padding: 10px;
@@ -240,18 +243,18 @@ code {
 #navigation #tri_buttons a#go_back_inactive,
 #navigation #tri_buttons a#new_file_inactive,
 #navigation #tri_buttons a#new_folder_inactive {
-  color: #333;
+  color: #333333;
 }
 #navigation #tri_buttons a#new_folder,
 #navigation #tri_buttons a#new_folder_inactive {
   width: 51px;
-  border-left: 1px solid #000;
+  border-left: 1px solid black;
   border-right: 0;
   margin-right: 0;
 }
 #navigation #tri_buttons a#go_back,
 #navigation #tri_buttons a#go_back_inactive {
-  border-left: 1px solid #000;
+  border-left: 1px solid black;
 }
 #navigation #tri_buttons a:hover {
   background: #171717;
